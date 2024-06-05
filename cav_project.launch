@@ -1,0 +1,19 @@
+<launch>
+	#QP solver 1
+	#name solveQP1
+	#package is cav_project
+	#type is file name
+	#output is screen
+	
+	#QP solver 2
+	#name solveQP2
+	#similar to QP solver 1
+	
+	#node for PID controller, both lat and long
+	
+	#node for limo info
+	
+	#node for main coordinator
+
+
+<launch>
