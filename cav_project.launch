@@ -1,0 +1,25 @@
+<launch>
+
+    <!-- Launch CAV1 QP Solver Node -->
+    <node pkg="cav_project" type="qp_solver_cav1.py" name="qp_solver_cav1" output="screen" />
+
+    <!-- Launch CAV2 QP Solver Node -->
+    <node pkg="cav_project" type="qp_solver_cav2.py" name="qp_solver_cav2" output="screen" />
+
+    <!-- Launch Main Coordinator Node -->
+    <node pkg="cav_project" type="main_coordinator.py" name="main_coordinator" output="screen" />
+
+    <!-- Launch PID Controller Node -->
+    <node pkg="cav_project" type="pid_controller.py" name="pid_controller" output="screen" />
+
+    <!-- Launch Limo Info Publisher Node for CAV1 -->
+    <node pkg="cav_project" type="limo_info_publisher.py" name="limo_info_publisher_cav1" output="screen">
+        <param name="node_name" value="cav1" />
+    </node>
+
+    <!-- Launch Limo Info Publisher Node for CAV2 -->
+    <node pkg="cav_project" type="limo_info_publisher.py" name="limo_info_publisher_cav2" output="screen">
+        <param name="node_name" value="cav2" />
+    </node>
+    
+</launch>
