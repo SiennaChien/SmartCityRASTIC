@@ -1,0 +1,2 @@
+cav_project:vrpn_client_ros
+-DCATKIN_DEVEL_PREFIX=/home/CodesDell/Desktop/SmartCityRASTIC/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/CodesDell/Desktop/SmartCityRASTIC/catkin_ws/install -G Unix Makefiles
