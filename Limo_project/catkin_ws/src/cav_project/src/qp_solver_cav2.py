@@ -96,7 +96,8 @@ class QPSolverCAV2:
         if Solution['status'] == 'optimal':
             return Solution['x'].trans()
         return None
-
+        print(x)
+        
     def recalc_QP(self):
         infeasible = False
         if not self.cav_info or not self.other_cav_info:
@@ -135,13 +136,16 @@ class QPSolverCAV2:
         qp_mat = np.array(QP_rows)
         u = None
 
-        if len(qp_mat) > 1 and not infeasible:
+       if len(qp_mat) > 1 and not infeasible:
             u = self.solve_qp(qp_mat, my_vec)
+            if u is not None:
+                u = u[0]
+                print(f"CAV1 QP Solution: {u}")
         if u is None:
             u = self.u_min
         QP_SOLN.u.data = u
         self.qp_solution_pub.publish(QP_SOLN)
-
+       print(QP_SOLN)
     def run(self):
         while not rospy.is_shutdown():
             if self.cav_info and self.other_cav_info:
@@ -151,4 +155,4 @@ class QPSolverCAV2:
 if __name__ == '__main__':
     solver = QPSolverCAV2()
     solver.run()
-
+    print(solver)

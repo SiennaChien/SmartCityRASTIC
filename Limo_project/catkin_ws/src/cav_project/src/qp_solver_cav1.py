@@ -1,23 +1,17 @@
 #!/usr/bin/env python3
-import math
 import rospy
 import numpy as np
 from cav_project.msg import limo_info, limo_info_array, QP_solution
 from cvxopt import matrix, solvers
-from cvxopt.solvers import qp
-from geometry_msgs.msg import PoseStamped
-from ackermann_msgs.msg import AckermannDrive
-from scipy.integrate import odeint
-
 
 QP_SOLN = QP_solution()
 
 class QPSolverCAV1:
     def __init__(self):
-        rospy.init_node("QP_solver_node_cav1")
+        rospy.init_node("qp_solver_cav1")
         self.qp_solution_pub = rospy.Publisher('/qp_solution_cav1', QP_solution, queue_size=10)
         self.cav_info_sub = rospy.Subscriber('/limo_info_cav1', limo_info, self.cav_info_callback)
-        self.other_cav_info_sub = rospy.Subscriber('/limo_info_cav2', limo_info, self.other_cav_info_callback)
+        self.other_cav_info_sub = rospy.Subscriber('/limo_info_array', limo_info_array, self.other_cav_info_callback)
         self.cav_info = None
         self.other_cav_info = None
         self.rate = rospy.Rate(10)
@@ -97,7 +91,7 @@ class QPSolverCAV1:
             return Solution['x'].trans()
         return None
 
-    def recalc_QP(self):
+    def recalc_qp(self):
         infeasible = False
         if not self.cav_info or not self.other_cav_info:
             return
@@ -137,20 +131,20 @@ class QPSolverCAV1:
 
         if len(qp_mat) > 1 and not infeasible:
             u = self.solve_qp(qp_mat, my_vec)
+            if u is not None:
+                u = u[0]
+                print(f"CAV1 QP Solution: {u}")
         if u is None:
             u = self.u_min
-        QP_SOLN.u.data = 0#u
-
+        QP_SOLN.u.data = u
         self.qp_solution_pub.publish(QP_SOLN)
 
     def run(self):
         while not rospy.is_shutdown():
             if self.cav_info and self.other_cav_info:
-                self.recalc_QP()
-
+                self.recalc_qp()
             self.rate.sleep()
 
 if __name__ == '__main__':
     solver = QPSolverCAV1()
     solver.run()
-
