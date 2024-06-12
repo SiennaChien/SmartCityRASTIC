@@ -21,21 +21,6 @@
     :reader control_input
     :initarg :control_input
     :type cl:float
-    :initform 0.0)
-   (vel
-    :reader vel
-    :initarg :vel
-    :type cl:float
-    :initform 0.0)
-   (d1
-    :reader d1
-    :initarg :d1
-    :type cl:float
-    :initform 0.0)
-   (d2
-    :reader d2
-    :initarg :d2
-    :type cl:float
     :initform 0.0))
 )
 
@@ -61,21 +46,6 @@
 (cl:defmethod control_input-val ((m <ControlInfo>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader cav_project-msg:control_input-val is deprecated.  Use cav_project-msg:control_input instead.")
   (control_input m))
-
-(cl:ensure-generic-function 'vel-val :lambda-list '(m))
-(cl:defmethod vel-val ((m <ControlInfo>))
-  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader cav_project-msg:vel-val is deprecated.  Use cav_project-msg:vel instead.")
-  (vel m))
-
-(cl:ensure-generic-function 'd1-val :lambda-list '(m))
-(cl:defmethod d1-val ((m <ControlInfo>))
-  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader cav_project-msg:d1-val is deprecated.  Use cav_project-msg:d1 instead.")
-  (d1 m))
-
-(cl:ensure-generic-function 'd2-val :lambda-list '(m))
-(cl:defmethod d2-val ((m <ControlInfo>))
-  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader cav_project-msg:d2-val is deprecated.  Use cav_project-msg:d2 instead.")
-  (d2 m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <ControlInfo>) ostream)
   "Serializes a message object of type '<ControlInfo>"
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'steering_angle))))
@@ -97,33 +67,6 @@
     (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'control_input))))
-    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
-  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'vel))))
-    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
-  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'd1))))
-    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
-    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
-  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'd2))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
@@ -165,36 +108,6 @@
       (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'control_input) (roslisp-utils:decode-double-float-bits bits)))
-    (cl:let ((bits 0))
-      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'vel) (roslisp-utils:decode-double-float-bits bits)))
-    (cl:let ((bits 0))
-      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'd1) (roslisp-utils:decode-double-float-bits bits)))
-    (cl:let ((bits 0))
-      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
-      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
-    (cl:setf (cl:slot-value msg 'd2) (roslisp-utils:decode-double-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<ControlInfo>)))
@@ -205,21 +118,18 @@
   "cav_project/ControlInfo")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<ControlInfo>)))
   "Returns md5sum for a message object of type '<ControlInfo>"
-  "1c8087d5e0337d333edf508e1afaee4b")
+  "6a24bd3f8a8eca54ba890a9158619a2e")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'ControlInfo)))
   "Returns md5sum for a message object of type 'ControlInfo"
-  "1c8087d5e0337d333edf508e1afaee4b")
+  "6a24bd3f8a8eca54ba890a9158619a2e")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<ControlInfo>)))
   "Returns full string definition for message of type '<ControlInfo>"
-  (cl:format cl:nil "float64 steering_angle~%float64 desired_velocity~%float64 control_input~%float64 vel~%float64 d1~%float64 d2~%~%~%"))
+  (cl:format cl:nil "float64 steering_angle~%float64 desired_velocity~%float64 control_input~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'ControlInfo)))
   "Returns full string definition for message of type 'ControlInfo"
-  (cl:format cl:nil "float64 steering_angle~%float64 desired_velocity~%float64 control_input~%float64 vel~%float64 d1~%float64 d2~%~%~%"))
+  (cl:format cl:nil "float64 steering_angle~%float64 desired_velocity~%float64 control_input~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <ControlInfo>))
   (cl:+ 0
-     8
-     8
-     8
      8
      8
      8
@@ -230,7 +140,4 @@
     (cl:cons ':steering_angle (steering_angle msg))
     (cl:cons ':desired_velocity (desired_velocity msg))
     (cl:cons ':control_input (control_input msg))
-    (cl:cons ':vel (vel msg))
-    (cl:cons ':d1 (d1 msg))
-    (cl:cons ':d2 (d2 msg))
 ))

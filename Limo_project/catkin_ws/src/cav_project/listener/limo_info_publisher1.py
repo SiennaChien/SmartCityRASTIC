@@ -12,11 +12,13 @@ from cav_project.msg import limo_info, limo_info_array, ControlInfo, QP_solution
 
 
 class LimoInfoPublisher:
-    def __init__(self):
-        rospy.init_node('limo_info_publisher1')
-        self.info_pub_cav1 = rospy.Publisher('/limo_info_cav1', limo_info, queue_size=10)
-        self.odom_sub_cav1 = rospy.Subscriber('/odom_cav1', Odometry, self.odom_callback_cav1)
-        self.control_info_sub_cav1 = rospy.Subscriber("control_info_cav1", ControlInfo, self.control_info_callback)
+    def __init__(self, ID):
+        self.ID = ID
+
+        rospy.init_node('limo_info_publisher_'+self.ID)
+        self.info_pub_cav1 = rospy.Publisher('/limo_info_'+self.ID, limo_info, queue_size=10)
+        self.odom_sub_cav1 = rospy.Subscriber('/odom_'+self.ID, Odometry, self.odom_callback_cav1)
+        self.control_info_sub_cav1 = rospy.Subscriber("control_info_"+self.ID, ControlInfo, self.control_info_callback)
 
         self.limo_data_cav1 = limo_info()
         self.control_info_cav1 = ControlInfo()
@@ -33,17 +35,13 @@ class LimoInfoPublisher:
         self.limo_data_cav1.vel.data = msg.twist.twist.linear.x
         self.publish_info()
 
-
     def run(self):
         while not rospy.is_shutdown():
-
             self.rate.sleep()
 
 
-
-
 if __name__ == '__main__':
-    publisher = LimoInfoPublisher()
+    publisher = LimoInfoPublisher("limo770")
     limo= limo.LIMO()
     limo.EnableCommand()
     limo.SetMotionCommand(linear_vel=0, steering_angle=0)
@@ -70,5 +68,4 @@ if __name__ == '__main__':
     #fw = open(outputFile, 'wb')
     #pickle.dump(data, fw)
     #fw.close()
-
     publisher.publish_info()

@@ -21,9 +21,6 @@ class ControlInfo {
       this.steering_angle = null;
       this.desired_velocity = null;
       this.control_input = null;
-      this.vel = null;
-      this.d1 = null;
-      this.d2 = null;
     }
     else {
       if (initObj.hasOwnProperty('steering_angle')) {
@@ -44,24 +41,6 @@ class ControlInfo {
       else {
         this.control_input = 0.0;
       }
-      if (initObj.hasOwnProperty('vel')) {
-        this.vel = initObj.vel
-      }
-      else {
-        this.vel = 0.0;
-      }
-      if (initObj.hasOwnProperty('d1')) {
-        this.d1 = initObj.d1
-      }
-      else {
-        this.d1 = 0.0;
-      }
-      if (initObj.hasOwnProperty('d2')) {
-        this.d2 = initObj.d2
-      }
-      else {
-        this.d2 = 0.0;
-      }
     }
   }
 
@@ -73,12 +52,6 @@ class ControlInfo {
     bufferOffset = _serializer.float64(obj.desired_velocity, buffer, bufferOffset);
     // Serialize message field [control_input]
     bufferOffset = _serializer.float64(obj.control_input, buffer, bufferOffset);
-    // Serialize message field [vel]
-    bufferOffset = _serializer.float64(obj.vel, buffer, bufferOffset);
-    // Serialize message field [d1]
-    bufferOffset = _serializer.float64(obj.d1, buffer, bufferOffset);
-    // Serialize message field [d2]
-    bufferOffset = _serializer.float64(obj.d2, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -92,17 +65,11 @@ class ControlInfo {
     data.desired_velocity = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [control_input]
     data.control_input = _deserializer.float64(buffer, bufferOffset);
-    // Deserialize message field [vel]
-    data.vel = _deserializer.float64(buffer, bufferOffset);
-    // Deserialize message field [d1]
-    data.d1 = _deserializer.float64(buffer, bufferOffset);
-    // Deserialize message field [d2]
-    data.d2 = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 48;
+    return 24;
   }
 
   static datatype() {
@@ -112,7 +79,7 @@ class ControlInfo {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '1c8087d5e0337d333edf508e1afaee4b';
+    return '6a24bd3f8a8eca54ba890a9158619a2e';
   }
 
   static messageDefinition() {
@@ -121,9 +88,6 @@ class ControlInfo {
     float64 steering_angle
     float64 desired_velocity
     float64 control_input
-    float64 vel
-    float64 d1
-    float64 d2
     
     `;
   }
@@ -153,27 +117,6 @@ class ControlInfo {
     }
     else {
       resolved.control_input = 0.0
-    }
-
-    if (msg.vel !== undefined) {
-      resolved.vel = msg.vel;
-    }
-    else {
-      resolved.vel = 0.0
-    }
-
-    if (msg.d1 !== undefined) {
-      resolved.d1 = msg.d1;
-    }
-    else {
-      resolved.d1 = 0.0
-    }
-
-    if (msg.d2 !== undefined) {
-      resolved.d2 = msg.d2;
-    }
-    else {
-      resolved.d2 = 0.0
     }
 
     return resolved;

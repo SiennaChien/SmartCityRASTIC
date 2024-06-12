@@ -9,30 +9,16 @@ import struct
 import std_msgs.msg
 
 class limo_info(genpy.Message):
-  _md5sum = "120a9aa2d6a27cbacb07fac971279075"
+  _md5sum = "b2990a44cec4fde7af6f58f2727169f0"
   _type = "cav_project/limo_info"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """std_msgs/Int32 ID
-std_msgs/Float64 x
-std_msgs/Float64 y
-std_msgs/Float64 vel
-std_msgs/String path
-std_msgs/Float64 d1
-std_msgs/Float64 d2
-std_msgs/Float64 origin_dist
+  _full_text = """std_msgs/Float64 vel
 
 ================================================================================
-MSG: std_msgs/Int32
-int32 data
-================================================================================
 MSG: std_msgs/Float64
-float64 data
-================================================================================
-MSG: std_msgs/String
-string data
-"""
-  __slots__ = ['ID','x','y','vel','path','d1','d2','origin_dist']
-  _slot_types = ['std_msgs/Int32','std_msgs/Float64','std_msgs/Float64','std_msgs/Float64','std_msgs/String','std_msgs/Float64','std_msgs/Float64','std_msgs/Float64']
+float64 data"""
+  __slots__ = ['vel']
+  _slot_types = ['std_msgs/Float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -42,7 +28,7 @@ string data
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       ID,x,y,vel,path,d1,d2,origin_dist
+       vel
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -51,31 +37,10 @@ string data
     if args or kwds:
       super(limo_info, self).__init__(*args, **kwds)
       # message fields cannot be None, assign default values for those that are
-      if self.ID is None:
-        self.ID = std_msgs.msg.Int32()
-      if self.x is None:
-        self.x = std_msgs.msg.Float64()
-      if self.y is None:
-        self.y = std_msgs.msg.Float64()
       if self.vel is None:
         self.vel = std_msgs.msg.Float64()
-      if self.path is None:
-        self.path = std_msgs.msg.String()
-      if self.d1 is None:
-        self.d1 = std_msgs.msg.Float64()
-      if self.d2 is None:
-        self.d2 = std_msgs.msg.Float64()
-      if self.origin_dist is None:
-        self.origin_dist = std_msgs.msg.Float64()
     else:
-      self.ID = std_msgs.msg.Int32()
-      self.x = std_msgs.msg.Float64()
-      self.y = std_msgs.msg.Float64()
       self.vel = std_msgs.msg.Float64()
-      self.path = std_msgs.msg.String()
-      self.d1 = std_msgs.msg.Float64()
-      self.d2 = std_msgs.msg.Float64()
-      self.origin_dist = std_msgs.msg.Float64()
 
   def _get_types(self):
     """
@@ -89,16 +54,8 @@ string data
     :param buff: buffer, ``StringIO``
     """
     try:
-      _x = self
-      buff.write(_get_struct_i3d().pack(_x.ID.data, _x.x.data, _x.y.data, _x.vel.data))
-      _x = self.path.data
-      length = len(_x)
-      if python3 or type(_x) == unicode:
-        _x = _x.encode('utf-8')
-        length = len(_x)
-      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self
-      buff.write(_get_struct_3d().pack(_x.d1.data, _x.d2.data, _x.origin_dist.data))
+      _x = self.vel.data
+      buff.write(_get_struct_d().pack(_x))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -110,40 +67,12 @@ string data
     if python3:
       codecs.lookup_error("rosmsg").msg_type = self._type
     try:
-      if self.ID is None:
-        self.ID = std_msgs.msg.Int32()
-      if self.x is None:
-        self.x = std_msgs.msg.Float64()
-      if self.y is None:
-        self.y = std_msgs.msg.Float64()
       if self.vel is None:
         self.vel = std_msgs.msg.Float64()
-      if self.path is None:
-        self.path = std_msgs.msg.String()
-      if self.d1 is None:
-        self.d1 = std_msgs.msg.Float64()
-      if self.d2 is None:
-        self.d2 = std_msgs.msg.Float64()
-      if self.origin_dist is None:
-        self.origin_dist = std_msgs.msg.Float64()
       end = 0
-      _x = self
       start = end
-      end += 28
-      (_x.ID.data, _x.x.data, _x.y.data, _x.vel.data,) = _get_struct_i3d().unpack(str[start:end])
-      start = end
-      end += 4
-      (length,) = _struct_I.unpack(str[start:end])
-      start = end
-      end += length
-      if python3:
-        self.path.data = str[start:end].decode('utf-8', 'rosmsg')
-      else:
-        self.path.data = str[start:end]
-      _x = self
-      start = end
-      end += 24
-      (_x.d1.data, _x.d2.data, _x.origin_dist.data,) = _get_struct_3d().unpack(str[start:end])
+      end += 8
+      (self.vel.data,) = _get_struct_d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -156,16 +85,8 @@ string data
     :param numpy: numpy python module
     """
     try:
-      _x = self
-      buff.write(_get_struct_i3d().pack(_x.ID.data, _x.x.data, _x.y.data, _x.vel.data))
-      _x = self.path.data
-      length = len(_x)
-      if python3 or type(_x) == unicode:
-        _x = _x.encode('utf-8')
-        length = len(_x)
-      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
-      _x = self
-      buff.write(_get_struct_3d().pack(_x.d1.data, _x.d2.data, _x.origin_dist.data))
+      _x = self.vel.data
+      buff.write(_get_struct_d().pack(_x))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -178,40 +99,12 @@ string data
     if python3:
       codecs.lookup_error("rosmsg").msg_type = self._type
     try:
-      if self.ID is None:
-        self.ID = std_msgs.msg.Int32()
-      if self.x is None:
-        self.x = std_msgs.msg.Float64()
-      if self.y is None:
-        self.y = std_msgs.msg.Float64()
       if self.vel is None:
         self.vel = std_msgs.msg.Float64()
-      if self.path is None:
-        self.path = std_msgs.msg.String()
-      if self.d1 is None:
-        self.d1 = std_msgs.msg.Float64()
-      if self.d2 is None:
-        self.d2 = std_msgs.msg.Float64()
-      if self.origin_dist is None:
-        self.origin_dist = std_msgs.msg.Float64()
       end = 0
-      _x = self
       start = end
-      end += 28
-      (_x.ID.data, _x.x.data, _x.y.data, _x.vel.data,) = _get_struct_i3d().unpack(str[start:end])
-      start = end
-      end += 4
-      (length,) = _struct_I.unpack(str[start:end])
-      start = end
-      end += length
-      if python3:
-        self.path.data = str[start:end].decode('utf-8', 'rosmsg')
-      else:
-        self.path.data = str[start:end]
-      _x = self
-      start = end
-      end += 24
-      (_x.d1.data, _x.d2.data, _x.origin_dist.data,) = _get_struct_3d().unpack(str[start:end])
+      end += 8
+      (self.vel.data,) = _get_struct_d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -220,15 +113,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_3d = None
-def _get_struct_3d():
-    global _struct_3d
-    if _struct_3d is None:
-        _struct_3d = struct.Struct("<3d")
-    return _struct_3d
-_struct_i3d = None
-def _get_struct_i3d():
-    global _struct_i3d
-    if _struct_i3d is None:
-        _struct_i3d = struct.Struct("<i3d")
-    return _struct_i3d
+_struct_d = None
+def _get_struct_d():
+    global _struct_d
+    if _struct_d is None:
+        _struct_d = struct.Struct("<d")
+    return _struct_d

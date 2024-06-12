@@ -15,13 +15,6 @@
 #include <ros/builtin_message_traits.h>
 #include <ros/message_operations.h>
 
-#include <std_msgs/Int32.h>
-#include <std_msgs/Float64.h>
-#include <std_msgs/Float64.h>
-#include <std_msgs/Float64.h>
-#include <std_msgs/String.h>
-#include <std_msgs/Float64.h>
-#include <std_msgs/Float64.h>
 #include <std_msgs/Float64.h>
 
 namespace cav_project
@@ -32,52 +25,17 @@ struct limo_info_
   typedef limo_info_<ContainerAllocator> Type;
 
   limo_info_()
-    : ID()
-    , x()
-    , y()
-    , vel()
-    , path()
-    , d1()
-    , d2()
-    , origin_dist()  {
+    : vel()  {
     }
   limo_info_(const ContainerAllocator& _alloc)
-    : ID(_alloc)
-    , x(_alloc)
-    , y(_alloc)
-    , vel(_alloc)
-    , path(_alloc)
-    , d1(_alloc)
-    , d2(_alloc)
-    , origin_dist(_alloc)  {
+    : vel(_alloc)  {
   (void)_alloc;
     }
 
 
 
-   typedef  ::std_msgs::Int32_<ContainerAllocator>  _ID_type;
-  _ID_type ID;
-
-   typedef  ::std_msgs::Float64_<ContainerAllocator>  _x_type;
-  _x_type x;
-
-   typedef  ::std_msgs::Float64_<ContainerAllocator>  _y_type;
-  _y_type y;
-
    typedef  ::std_msgs::Float64_<ContainerAllocator>  _vel_type;
   _vel_type vel;
-
-   typedef  ::std_msgs::String_<ContainerAllocator>  _path_type;
-  _path_type path;
-
-   typedef  ::std_msgs::Float64_<ContainerAllocator>  _d1_type;
-  _d1_type d1;
-
-   typedef  ::std_msgs::Float64_<ContainerAllocator>  _d2_type;
-  _d2_type d2;
-
-   typedef  ::std_msgs::Float64_<ContainerAllocator>  _origin_dist_type;
-  _origin_dist_type origin_dist;
 
 
 
@@ -108,14 +66,7 @@ return s;
 template<typename ContainerAllocator1, typename ContainerAllocator2>
 bool operator==(const ::cav_project::limo_info_<ContainerAllocator1> & lhs, const ::cav_project::limo_info_<ContainerAllocator2> & rhs)
 {
-  return lhs.ID == rhs.ID &&
-    lhs.x == rhs.x &&
-    lhs.y == rhs.y &&
-    lhs.vel == rhs.vel &&
-    lhs.path == rhs.path &&
-    lhs.d1 == rhs.d1 &&
-    lhs.d2 == rhs.d2 &&
-    lhs.origin_dist == rhs.origin_dist;
+  return lhs.vel == rhs.vel;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -148,12 +99,12 @@ struct IsMessage< ::cav_project::limo_info_<ContainerAllocator> const>
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::cav_project::limo_info_<ContainerAllocator> >
-  : FalseType
+  : TrueType
   { };
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::cav_project::limo_info_<ContainerAllocator> const>
-  : FalseType
+  : TrueType
   { };
 
 template <class ContainerAllocator>
@@ -172,12 +123,12 @@ struct MD5Sum< ::cav_project::limo_info_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "120a9aa2d6a27cbacb07fac971279075";
+    return "b2990a44cec4fde7af6f58f2727169f0";
   }
 
   static const char* value(const ::cav_project::limo_info_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x120a9aa2d6a27cbaULL;
-  static const uint64_t static_value2 = 0xcb07fac971279075ULL;
+  static const uint64_t static_value1 = 0xb2990a44cec4fde7ULL;
+  static const uint64_t static_value2 = 0xaf6f58f2727169f0ULL;
 };
 
 template<class ContainerAllocator>
@@ -196,24 +147,11 @@ struct Definition< ::cav_project::limo_info_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "std_msgs/Int32 ID\n"
-"std_msgs/Float64 x\n"
-"std_msgs/Float64 y\n"
-"std_msgs/Float64 vel\n"
-"std_msgs/String path\n"
-"std_msgs/Float64 d1\n"
-"std_msgs/Float64 d2\n"
-"std_msgs/Float64 origin_dist\n"
+    return "std_msgs/Float64 vel\n"
 "\n"
-"================================================================================\n"
-"MSG: std_msgs/Int32\n"
-"int32 data\n"
 "================================================================================\n"
 "MSG: std_msgs/Float64\n"
 "float64 data\n"
-"================================================================================\n"
-"MSG: std_msgs/String\n"
-"string data\n"
 ;
   }
 
@@ -232,14 +170,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.ID);
-      stream.next(m.x);
-      stream.next(m.y);
       stream.next(m.vel);
-      stream.next(m.path);
-      stream.next(m.d1);
-      stream.next(m.d2);
-      stream.next(m.origin_dist);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -258,30 +189,9 @@ struct Printer< ::cav_project::limo_info_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::cav_project::limo_info_<ContainerAllocator>& v)
   {
-    s << indent << "ID: ";
-    s << std::endl;
-    Printer< ::std_msgs::Int32_<ContainerAllocator> >::stream(s, indent + "  ", v.ID);
-    s << indent << "x: ";
-    s << std::endl;
-    Printer< ::std_msgs::Float64_<ContainerAllocator> >::stream(s, indent + "  ", v.x);
-    s << indent << "y: ";
-    s << std::endl;
-    Printer< ::std_msgs::Float64_<ContainerAllocator> >::stream(s, indent + "  ", v.y);
     s << indent << "vel: ";
     s << std::endl;
     Printer< ::std_msgs::Float64_<ContainerAllocator> >::stream(s, indent + "  ", v.vel);
-    s << indent << "path: ";
-    s << std::endl;
-    Printer< ::std_msgs::String_<ContainerAllocator> >::stream(s, indent + "  ", v.path);
-    s << indent << "d1: ";
-    s << std::endl;
-    Printer< ::std_msgs::Float64_<ContainerAllocator> >::stream(s, indent + "  ", v.d1);
-    s << indent << "d2: ";
-    s << std::endl;
-    Printer< ::std_msgs::Float64_<ContainerAllocator> >::stream(s, indent + "  ", v.d2);
-    s << indent << "origin_dist: ";
-    s << std::endl;
-    Printer< ::std_msgs::Float64_<ContainerAllocator> >::stream(s, indent + "  ", v.origin_dist);
   }
 };
 

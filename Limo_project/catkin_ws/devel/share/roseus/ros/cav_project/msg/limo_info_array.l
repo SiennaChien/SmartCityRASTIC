@@ -61,36 +61,22 @@
    self)
   )
 
-(setf (get cav_project::limo_info_array :md5sum-) "cc8c33c215547bc4fe7561cb7d91633e")
+(setf (get cav_project::limo_info_array :md5sum-) "5a41342e126c12696bddf612e49f157c")
 (setf (get cav_project::limo_info_array :datatype-) "cav_project/limo_info_array")
 (setf (get cav_project::limo_info_array :definition-)
       "cav_project/limo_info[] limo_infos
 
 ================================================================================
 MSG: cav_project/limo_info
-std_msgs/Int32 ID
-std_msgs/Float64 x
-std_msgs/Float64 y
 std_msgs/Float64 vel
-std_msgs/String path
-std_msgs/Float64 d1
-std_msgs/Float64 d2
-std_msgs/Float64 origin_dist
 
-================================================================================
-MSG: std_msgs/Int32
-int32 data
 ================================================================================
 MSG: std_msgs/Float64
 float64 data
-================================================================================
-MSG: std_msgs/String
-string data
-
 ")
 
 
 
-(provide :cav_project/limo_info_array "cc8c33c215547bc4fe7561cb7d91633e")
+(provide :cav_project/limo_info_array "5a41342e126c12696bddf612e49f157c")
 
 

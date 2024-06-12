@@ -7,11 +7,13 @@ from cvxopt import matrix, solvers
 QP_SOLN = QP_solution()
 
 class QPSolverCAV1:
-    def __init__(self):
+    def __init__(self, ID, otherID):
+        self.ID = ID
+        self.otherID = otherID
         rospy.init_node("qp_solver_cav1")
-        self.qp_solution_pub = rospy.Publisher('/qp_solution_cav1', QP_solution, queue_size=10)
-        self.cav_info_sub = rospy.Subscriber('/limo_info_cav1', limo_info, self.cav_info_callback)
-        self.other_cav_info_sub = rospy.Subscriber('/limo_info_array', limo_info_array, self.other_cav_info_callback)
+        self.qp_solution_pub = rospy.Publisher('/qp_solution_'+self.ID, QP_solution, queue_size=10)
+        self.cav_info_sub = rospy.Subscriber('/limo_info_'+self.ID, limo_info, self.cav_info_callback)
+        self.other_cav_info_sub = rospy.Subscriber('/limo_info_'+self.otherID, limo_info,  self.other_cav_info_callback)
         self.cav_info = None
         self.other_cav_info = None
         self.rate = rospy.Rate(10)
@@ -146,5 +148,5 @@ class QPSolverCAV1:
             self.rate.sleep()
 
 if __name__ == '__main__':
-    solver = QPSolverCAV1()
+    solver = QPSolverCAV1("limo770", "limo155")
     solver.run()

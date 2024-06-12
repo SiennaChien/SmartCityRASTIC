@@ -26,18 +26,12 @@ struct ControlInfo_
   ControlInfo_()
     : steering_angle(0.0)
     , desired_velocity(0.0)
-    , control_input(0.0)
-    , vel(0.0)
-    , d1(0.0)
-    , d2(0.0)  {
+    , control_input(0.0)  {
     }
   ControlInfo_(const ContainerAllocator& _alloc)
     : steering_angle(0.0)
     , desired_velocity(0.0)
-    , control_input(0.0)
-    , vel(0.0)
-    , d1(0.0)
-    , d2(0.0)  {
+    , control_input(0.0)  {
   (void)_alloc;
     }
 
@@ -51,15 +45,6 @@ struct ControlInfo_
 
    typedef double _control_input_type;
   _control_input_type control_input;
-
-   typedef double _vel_type;
-  _vel_type vel;
-
-   typedef double _d1_type;
-  _d1_type d1;
-
-   typedef double _d2_type;
-  _d2_type d2;
 
 
 
@@ -92,10 +77,7 @@ bool operator==(const ::cav_project::ControlInfo_<ContainerAllocator1> & lhs, co
 {
   return lhs.steering_angle == rhs.steering_angle &&
     lhs.desired_velocity == rhs.desired_velocity &&
-    lhs.control_input == rhs.control_input &&
-    lhs.vel == rhs.vel &&
-    lhs.d1 == rhs.d1 &&
-    lhs.d2 == rhs.d2;
+    lhs.control_input == rhs.control_input;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -152,12 +134,12 @@ struct MD5Sum< ::cav_project::ControlInfo_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "1c8087d5e0337d333edf508e1afaee4b";
+    return "6a24bd3f8a8eca54ba890a9158619a2e";
   }
 
   static const char* value(const ::cav_project::ControlInfo_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x1c8087d5e0337d33ULL;
-  static const uint64_t static_value2 = 0x3edf508e1afaee4bULL;
+  static const uint64_t static_value1 = 0x6a24bd3f8a8eca54ULL;
+  static const uint64_t static_value2 = 0xba890a9158619a2eULL;
 };
 
 template<class ContainerAllocator>
@@ -179,9 +161,6 @@ struct Definition< ::cav_project::ControlInfo_<ContainerAllocator> >
     return "float64 steering_angle\n"
 "float64 desired_velocity\n"
 "float64 control_input\n"
-"float64 vel\n"
-"float64 d1\n"
-"float64 d2\n"
 ;
   }
 
@@ -203,9 +182,6 @@ namespace serialization
       stream.next(m.steering_angle);
       stream.next(m.desired_velocity);
       stream.next(m.control_input);
-      stream.next(m.vel);
-      stream.next(m.d1);
-      stream.next(m.d2);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -230,12 +206,6 @@ struct Printer< ::cav_project::ControlInfo_<ContainerAllocator> >
     Printer<double>::stream(s, indent + "  ", v.desired_velocity);
     s << indent << "control_input: ";
     Printer<double>::stream(s, indent + "  ", v.control_input);
-    s << indent << "vel: ";
-    Printer<double>::stream(s, indent + "  ", v.vel);
-    s << indent << "d1: ";
-    Printer<double>::stream(s, indent + "  ", v.d1);
-    s << indent << "d2: ";
-    Printer<double>::stream(s, indent + "  ", v.d2);
   }
 };
 

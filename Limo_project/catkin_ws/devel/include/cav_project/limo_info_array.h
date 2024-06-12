@@ -123,12 +123,12 @@ struct MD5Sum< ::cav_project::limo_info_array_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "cc8c33c215547bc4fe7561cb7d91633e";
+    return "5a41342e126c12696bddf612e49f157c";
   }
 
   static const char* value(const ::cav_project::limo_info_array_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0xcc8c33c215547bc4ULL;
-  static const uint64_t static_value2 = 0xfe7561cb7d91633eULL;
+  static const uint64_t static_value1 = 0x5a41342e126c1269ULL;
+  static const uint64_t static_value2 = 0x6bddf612e49f157cULL;
 };
 
 template<class ContainerAllocator>
@@ -151,24 +151,11 @@ struct Definition< ::cav_project::limo_info_array_<ContainerAllocator> >
 "\n"
 "================================================================================\n"
 "MSG: cav_project/limo_info\n"
-"std_msgs/Int32 ID\n"
-"std_msgs/Float64 x\n"
-"std_msgs/Float64 y\n"
 "std_msgs/Float64 vel\n"
-"std_msgs/String path\n"
-"std_msgs/Float64 d1\n"
-"std_msgs/Float64 d2\n"
-"std_msgs/Float64 origin_dist\n"
 "\n"
-"================================================================================\n"
-"MSG: std_msgs/Int32\n"
-"int32 data\n"
 "================================================================================\n"
 "MSG: std_msgs/Float64\n"
 "float64 data\n"
-"================================================================================\n"
-"MSG: std_msgs/String\n"
-"string data\n"
 ;
   }
 

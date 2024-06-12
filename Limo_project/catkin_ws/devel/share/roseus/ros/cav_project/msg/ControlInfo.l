@@ -14,7 +14,7 @@
 
 (defclass cav_project::ControlInfo
   :super ros::object
-  :slots (_steering_angle _desired_velocity _control_input _vel _d1 _d2 ))
+  :slots (_steering_angle _desired_velocity _control_input ))
 
 (defmethod cav_project::ControlInfo
   (:init
@@ -22,17 +22,11 @@
     ((:steering_angle __steering_angle) 0.0)
     ((:desired_velocity __desired_velocity) 0.0)
     ((:control_input __control_input) 0.0)
-    ((:vel __vel) 0.0)
-    ((:d1 __d1) 0.0)
-    ((:d2 __d2) 0.0)
     )
    (send-super :init)
    (setq _steering_angle (float __steering_angle))
    (setq _desired_velocity (float __desired_velocity))
    (setq _control_input (float __control_input))
-   (setq _vel (float __vel))
-   (setq _d1 (float __d1))
-   (setq _d2 (float __d2))
    self)
   (:steering_angle
    (&optional __steering_angle)
@@ -43,15 +37,6 @@
   (:control_input
    (&optional __control_input)
    (if __control_input (setq _control_input __control_input)) _control_input)
-  (:vel
-   (&optional __vel)
-   (if __vel (setq _vel __vel)) _vel)
-  (:d1
-   (&optional __d1)
-   (if __d1 (setq _d1 __d1)) _d1)
-  (:d2
-   (&optional __d2)
-   (if __d2 (setq _d2 __d2)) _d2)
   (:serialization-length
    ()
    (+
@@ -60,12 +45,6 @@
     ;; float64 _desired_velocity
     8
     ;; float64 _control_input
-    8
-    ;; float64 _vel
-    8
-    ;; float64 _d1
-    8
-    ;; float64 _d2
     8
     ))
   (:serialize
@@ -78,12 +57,6 @@
        (sys::poke _desired_velocity (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;; float64 _control_input
        (sys::poke _control_input (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; float64 _vel
-       (sys::poke _vel (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; float64 _d1
-       (sys::poke _d1 (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
-     ;; float64 _d2
-       (sys::poke _d2 (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -94,30 +67,21 @@
      (setq _desired_velocity (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;; float64 _control_input
      (setq _control_input (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; float64 _vel
-     (setq _vel (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; float64 _d1
-     (setq _d1 (sys::peek buf ptr- :double)) (incf ptr- 8)
-   ;; float64 _d2
-     (setq _d2 (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
 
-(setf (get cav_project::ControlInfo :md5sum-) "1c8087d5e0337d333edf508e1afaee4b")
+(setf (get cav_project::ControlInfo :md5sum-) "6a24bd3f8a8eca54ba890a9158619a2e")
 (setf (get cav_project::ControlInfo :datatype-) "cav_project/ControlInfo")
 (setf (get cav_project::ControlInfo :definition-)
       "float64 steering_angle
 float64 desired_velocity
 float64 control_input
-float64 vel
-float64 d1
-float64 d2
 
 ")
 
 
 
-(provide :cav_project/ControlInfo "1c8087d5e0337d333edf508e1afaee4b")
+(provide :cav_project/ControlInfo "6a24bd3f8a8eca54ba890a9158619a2e")
 
 

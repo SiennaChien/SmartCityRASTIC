@@ -13,11 +13,14 @@ from scipy.integrate import odeint
 QP_SOLN = QP_solution()
 
 class QPSolverCAV2:
-    def __init__(self):
+    def __init__(self, ID, otherID):
+
+        self.ID = ID
         rospy.init_node("QP_solver_node_cav2")
-        self.qp_solution_pub = rospy.Publisher('/qp_solution_cav2', QP_solution, queue_size=10)
-        self.cav_info_sub = rospy.Subscriber('/limo_info_cav2', limo_info, self.cav_info_callback)
-        self.other_cav_info_sub = rospy.Subscriber('/limo_info_cav1', limo_info, self.other_cav_info_callback)
+        self.otherID = otherID
+        self.qp_solution_pub = rospy.Publisher('/qp_solution_'+self.ID, QP_solution, queue_size=10)
+        self.cav_info_sub = rospy.Subscriber('/limo_info_'+self.ID, limo_info, self.cav_info_callback)
+        self.other_cav_info_sub = rospy.Subscriber('/limo_info_'+self.otherID, limo_info, self.other_cav_info_callback)
         self.cav_info = None
         self.other_cav_info = None
         self.rate = rospy.Rate(10)
@@ -97,7 +100,7 @@ class QPSolverCAV2:
             return Solution['x'].trans()
         return None
         print(x)
-        
+
     def recalc_QP(self):
         infeasible = False
         if not self.cav_info or not self.other_cav_info:
@@ -136,7 +139,7 @@ class QPSolverCAV2:
         qp_mat = np.array(QP_rows)
         u = None
 
-       if len(qp_mat) > 1 and not infeasible:
+        if len(qp_mat) > 1 and not infeasible:
             u = self.solve_qp(qp_mat, my_vec)
             if u is not None:
                 u = u[0]
@@ -145,7 +148,7 @@ class QPSolverCAV2:
             u = self.u_min
         QP_SOLN.u.data = u
         self.qp_solution_pub.publish(QP_SOLN)
-       print(QP_SOLN)
+        print(QP_SOLN)
     def run(self):
         while not rospy.is_shutdown():
             if self.cav_info and self.other_cav_info:
@@ -153,6 +156,6 @@ class QPSolverCAV2:
             self.rate.sleep()
 
 if __name__ == '__main__':
-    solver = QPSolverCAV2()
+    solver = QPSolverCAV2("limo155", "limo770")
     solver.run()
     print(solver)
