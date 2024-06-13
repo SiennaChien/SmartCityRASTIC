@@ -119,9 +119,9 @@ class CAV:
         return distance
 
     def pid_lateral_controller(self, lateral_error, e_prev, e_int):
-        kp = 0.0005
-        ki = 0.00005
-        kd = 0.001
+        kp = 0.00004
+        ki = 0.000025
+        kd = 0.00045
         e_int += lateral_error * self.delta_t
         e_der = (lateral_error - e_prev) / self.delta_t
         steering_angle = kp * lateral_error + ki * e_int + kd * e_der
@@ -145,7 +145,7 @@ class CAV:
             self.generate_map(self.isMain)
             if True: #self.qp_solution_cav1 and self.qp_solution_cav2 and self.cav_info_cav1 and self.cav_info_cav2:
                 # Calculate desired velocities using QP solutions
-                desired_velocity_cav1 = 0 #self.cav_info_cav1.vel.data + self.qp_solution_cav1.u * 0.05
+                desired_velocity_cav1 = 0.7 #self.cav_info_cav1.vel.data + self.qp_solution_cav1.u * 0.05
                 lateral_error_cav1 = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2])/((self.main_path[0]**2+self.main_path[1]**2)**0.5)
                 steering_angle_cav1, self.e_prev_lateral_cav1, self.e_int_lateral_cav1 = self.pid_lateral_controller(lateral_error_cav1, self.e_prev_lateral_cav1, self.e_int_lateral_cav1)
                 actual_velocity_cav1 = 0.5 #self.cav_info_cav1.vel.data
