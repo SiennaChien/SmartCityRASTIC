@@ -1,6 +1,0 @@
-<launch>
-    <node pkg="cav_project" type="main_coordinator.py" name="main_coordinator" output="screen"/>
-    <node pkg="cav_project" type="qp_solver_cav1.py" name="qp_solver_cav1" output="screen"/>
-    <node pkg="cav_project" type="qp_solver_cav2.py" name="qp_solver_cav2" output="screen"/>
-    <node pkg="cav_project" type="limo_info_publisher.py" name="limo_info_publisher" output="screen"/>
-</launch>
