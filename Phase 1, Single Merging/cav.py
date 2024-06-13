@@ -9,7 +9,7 @@ import rospy
 # import time
 from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
-from ackermann_msgs.msg import AckermannDrive 
+from ackermann_msgs.msg import AckermannDrive
 from scipy.integrate import odeint
 from cvxopt import matrix,solvers
 
@@ -187,9 +187,9 @@ class CAV():
         return dx
 
     def PID_controller(self, v_desired, v_current, e_prev, e_int):
-        Kp = 0.05 
+        Kp = 0.05
         Ki = 0.07
-        Kd = 0.05  
+        Kd = 0.05
         error = v_desired - v_current
         e_int += error * self.Delta_T
         e_der = (error - e_prev) / self.Delta_T
@@ -349,7 +349,7 @@ class CAV():
 
         return X, Y, Z
 
-    def PIDController(self, x, x_ref, prev_e, prev_int, delta_t, Kp, Ki, Kd): 
+    def PIDController(self, x, x_ref, prev_e, prev_int, delta_t, Kp, Ki, Kd):
         e = x_ref - x
         e_int = prev_int + e * delta_t
         e_int = max(min(e_int, 0.5), -0.5)
@@ -362,7 +362,7 @@ class CAV():
 
         return u, u_k, u_i, u_d, e, e_int
 
-    def PIDController(self, e, prev_e, prev_int, delta_t, Kp, Ki, Kd): 
+    def PIDController(self, e, prev_e, prev_int, delta_t, Kp, Ki, Kd):
         if e <= 1 and e >= -1:
             e_int = 0
         e_int = prev_int + e * delta_t
