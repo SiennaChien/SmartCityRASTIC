@@ -1,5 +1,5 @@
 import time
-from cav_test import CAV
+from cav_for_line_follower import CAV
 
 #helper function to get equation of a line in the form Ax + By + C = 0
 def line_coef(x_1, x_2, y_1, y_2):
