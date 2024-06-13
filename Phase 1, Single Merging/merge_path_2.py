@@ -1,12 +1,8 @@
-import numpy as np
-import matplotlib.pyplot as plt
-#import pygame
-#import socket
 import time
 from geometry_msgs.msg import PoseStamped
 from ackermann_msgs.msg import AckermannDrive
 import rospy
-from cav import CAV
+from cav_for_merge_path import CAV
 
 def main():
     #initialize CAV, PID values, and another parameters
@@ -14,16 +10,11 @@ def main():
     CAV1 = CAV("limo770")
     CAV1.generate_map(isMain1)
 
-    # isMain2 = True
-    # CAV2 = CAV("limo155")
-    # CAV2.generate_map(isMain2)
-
     eprev_lateral_1= 0
     eint_lateral_1 = 0
     e = 0
     transmissionRate = 30
     dt = 1/transmissionRate # or 0.1
-    #rate = rospy.Rate(transmissionRate) # 1Hz
     v_ref_CAV1 = 0.5 # set between 0.5 and 0.6
     within_critical_range = False
     line_changed = True
@@ -36,9 +27,6 @@ def main():
     CAV1.kp, CAV1.ki, CAV1.kd = CAV1.PIDs[current]
     current_line = CAV1.lines[current]
     current_end_pt = CAV1.points[next]
-
-    # access the array that stores the distance of each line, then change velocity if the length is quite large
-    # v_ref_CAV1 = 0.5 # set between 0.5 and 0.6, or higher if line is longer
 
     while True:
 
@@ -70,11 +58,6 @@ def main():
             current_line = CAV1.lines[current]
             e = -(current_line[0]*CAV1.position_x + current_line[1]*CAV1.position_z + current_line[2])/((current_line[0]**2 + current_line[1]**2)**0.5)
             v_ref_CAV1 = fast
-            # if CAV1.dists[current] < 3000:
-            #  	v_ref_CAV1 = 0.5
-            # else:
-            #     v_ref_CAV1 = 0.7
-
             print("out of corner", e)
 
         #once out of the turning point, increment i to be corrsponding to the new line
@@ -96,8 +79,6 @@ def main():
         CAV1.pub.publish(drive_msg_CAV1)
 
         time.sleep(dt)
-
-    rospy.spin()
 
 if __name__ == '__main__':
     main()
