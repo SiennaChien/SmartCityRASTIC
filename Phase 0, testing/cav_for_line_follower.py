@@ -18,15 +18,15 @@ class CAV():
         self.position_ip_x = 0
         self.ip_velocity = 0
         self.ip_acceleration = 0
-        self.kp=0
-        self.ki=0
+        self.kp = 0
+        self.ki = 0
         self.kd = 0
-        # construct publisher
+
+        #construct node, subscribe and publish the corrsponding rostopics 
         rospy.init_node("listen_pos", anonymous=True)
         self.sub = rospy.Subscriber('/vrpn_client_node/'+self.node_name+'/pose', PoseStamped, self.callback)
         self.pub = rospy.Publisher('vel_steer_'+self.node_name,AckermannDrive,queue_size=10) #topic name = CAV_Data
         rospy.Rate(10)
-
 
     def callback(self, msg):
         self.position_z = msg.pose.position.z*1000
@@ -34,37 +34,7 @@ class CAV():
         self.position_yaw = 0 
         self.Receivedata=1
 
-    def steeringAngleToSteeringCommand(self,refAngle):
-        x = refAngle
-        y = 0.7*x
-        return y
-
-
-    def PIDController(self, e, prev_e, prev_int, delta_t, Kp, Ki, Kd): #add theta_ref as input
-        if e <= 1 and e>=-1:
-            e_int = 0
-        # integral of the error
-        e_int = prev_int + e*delta_t
-
-        # anti-windup - preventing the integral error from growing too much
-        e_int = max(min(e_int,0.3),-0.3)
-
-        # derivative of the error
-        e_der = (e - prev_e)/delta_t
-
-        # controller coefficients
-        #Kp = .001
-        #Ki = 0
-        #Kd = 0.0001
-
-        # PID controller for omega
-        u_k = Kp*e
-        u_i = Ki*e_int
-        u_d = Kd*e_der
-        u = Kp*e + Ki*e_int + Kd*e_der
-
-        return u, u_k, u_i, u_d, e, e_int
-
+    #calculates steering
     def control(self,e,v_ref,bias_x,eprev_lateral,eint_lateral,dt):
         if (eprev_lateral*e<=0):
             eint_lateral = 0
@@ -78,3 +48,31 @@ class CAV():
         drive_msg.speed = v_ref
         drive_msg.steering_angle = self.steeringAngleToSteeringCommand(ref_steer)
         return eprev_lateral,eint_lateral,drive_msg
+
+    #helper function for control()
+    def steeringAngleToSteeringCommand(self,refAngle):
+        x = refAngle
+        y = 0.7*x
+        return y
+    
+    #helper function for control(), the PID controller
+    def PIDController(self, e, prev_e, prev_int, delta_t, Kp, Ki, Kd):
+        if e <= 1 and e>=-1:
+            e_int = 0
+        # integral of the error
+        e_int = prev_int + e*delta_t
+
+        # anti-windup - preventing the integral error from growing too much
+        e_int = max(min(e_int,0.3),-0.3)
+
+        # derivative of the error
+        e_der = (e - prev_e)/delta_t
+
+        # PID controller for omega
+        u_k = Kp*e
+        u_i = Ki*e_int
+        u_d = Kd*e_der
+        u = Kp*e + Ki*e_int + Kd*e_der
+
+        return u, u_k, u_i, u_d, e, e_int
+
