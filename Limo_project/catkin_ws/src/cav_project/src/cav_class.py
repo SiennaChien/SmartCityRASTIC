@@ -14,7 +14,7 @@ class CAV:
     def __init__(self, ID, isMain):
         self.ID = ID
         self.isMain = isMain
-        rospy.init_node('CAV' + self.ID, anonymous=True)
+        #rospy.init_node('CAV' + self.ID, anonymous=True)
         self.control_info_pub = rospy.Publisher('/control_info_' + self.ID, ControlInfo, queue_size=10)
         self.mocap_sub = rospy.Subscriber('/vrpn_client_node/' + self.ID + '/pose', PoseStamped, self.mocap_callback)
         self.qp_solution_sub = rospy.Subscriber('/qp_solution_' + self.ID, QP_solution, self.qp_solution_callback)
@@ -135,22 +135,12 @@ class CAV:
         while not rospy.is_shutdown():
             if self.Receivedata:
                 # Calculate desired velocities using QP solutions
-                desired_velocity = self.qp_solution.u * 0.05  # Use control input from QP solution
+                desired_velocity = self.qp_solution * 0.05  # Use control input from QP solution
                 lateral_error = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2]) / ((self.main_path[0]**2 + self.main_path[1]**2)**0.5)
                 steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
                 actual_velocity = self.velocity
                 control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
-                  def run(self):
-        self.generate_map(self.isMain)
-        while not rospy.is_shutdown():
-            if self.Receivedata:
-                # Calculate desired velocities using QP solutions
-                desired_velocity = self.qp_solution.u*0.05  # Use control input from QP solution
-                lateral_error = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2]) / ((self.main_path[0]**2 + self.main_path[1]**2)**0.5)
-                steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
-                actual_velocity = self.velocity
-                control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
                 # Print control info
                 print("lateral_error: ", lateral_error)
