@@ -13,23 +13,19 @@ from cav_project.msg import limo_info, QP_solution, ControlInfo
 class CAV:
     def __init__(self, ID, isMain):
         self.ID = ID
-        #rospy.init_node('CAV'+self.ID, anonymous=True)
-        self.control_info_pub_cav1 = rospy.Publisher('/control_info_'+self.ID, ControlInfo, queue_size=10)
-        self.mocap_sub_cav1 = rospy.Subscriber('/vrpn_client_node/' + self.ID +'/pose', PoseStamped, self.mocap_callback_cav1)
-        self.qp_solution_cav1_sub = rospy.Subscriber('/qp_solution_'+self.ID, QP_solution, self.qp_solution_cav1_callback)
-        self.cav_info_cav1_sub = rospy.Subscriber('/limo_info_'+self.ID, limo_info, self.cav_info_cav1_callback)
+        self.isMain = isMain
+        rospy.init_node('CAV' + self.ID, anonymous=True)
+        self.control_info_pub = rospy.Publisher('/control_info_' + self.ID, ControlInfo, queue_size=10)
+        self.mocap_sub = rospy.Subscriber('/vrpn_client_node/' + self.ID + '/pose', PoseStamped, self.mocap_callback)
+        self.qp_solution_sub = rospy.Subscriber('/qp_solution_' + self.ID, QP_solution, self.qp_solution_callback)
+        self.cav_info_sub = rospy.Subscriber('/limo_info_' + self.ID, limo_info, self.cav_info_callback)
         self.rate = rospy.Rate(10)
 
         # PID state variables
-        self.isMain = isMain
-        self.e_prev_lateral_cav1 = 0
-        self.e_int_lateral_cav1 = 0
-        self.e_prev_lateral_cav2 = 0
-        self.e_int_lateral_cav2 = 0
-        self.e_prev_longitudinal_cav1 = 0
-        self.e_int_longitudinal_cav1 = 0
-        self.e_prev_longitudinal_cav2 = 0
-        self.e_int_longitudinal_cav2 = 0
+        self.e_prev_lateral = 0
+        self.e_int_lateral = 0
+        self.e_prev_longitudinal = 0
+        self.e_int_longitudinal = 0
         self.delta_t = 0.05
         self.position_yaw = 0
         self.velocity = 0
@@ -47,27 +43,22 @@ class CAV:
         self.max_steering_angle = 7000
 
         self.position_x = 0
+        self.position_y = 0
         self.position_z = 0
 
-
-    def mocap_callback_cav1(self, msg):
+    def mocap_callback(self, msg):
         self.position_z = msg.pose.position.z * 1000
         self.position_x = msg.pose.position.x * 1000
+        self.position_y = msg.pose.position.y * 1000
         self.position_yaw = 0
         self.Receivedata = 1
-        #self.publish_info()
-    def qp_solution_cav1_callback(self, msg):
-        self.qp_solution_cav1 = msg
+
+    def qp_solution_callback(self, msg):
+        self.qp_solution = msg
         print("qp solution callback function was called")
 
-    def cav_info_cav1_callback(self, msg):
-        self.cav_info_cav1 = msg
-
-    def callback(self, msg):
-        self.position_z = msg.pose.position.z * 1000
-        self.position_x = msg.pose.position.x * 1000
-        self.position_yaw = 0
-        self.Receivedata = 1
+    def cav_info_callback(self, msg):
+        self.cav_info = msg
 
     def generate_map(self, isMain):
         self.right_top_x = 3044
@@ -119,9 +110,9 @@ class CAV:
         return distance
 
     def pid_lateral_controller(self, lateral_error, e_prev, e_int):
-        kp = 0.00004
-        ki = 0.000025
-        kd = 0.00045
+        kp = 0.00003
+        ki = 0.00004
+        kd = 0.0005
         e_int += lateral_error * self.delta_t
         e_der = (lateral_error - e_prev) / self.delta_t
         steering_angle = kp * lateral_error + ki * e_int + kd * e_der
@@ -139,26 +130,35 @@ class CAV:
         control_input = max(min(control_input, 1), -1)
         return control_input, error, e_int
 
-
-
     def run(self):
-            self.generate_map(self.isMain)
-            if True: #self.qp_solution_cav1 and self.qp_solution_cav2 and self.cav_info_cav1 and self.cav_info_cav2:
+        self.generate_map(self.isMain)
+        while not rospy.is_shutdown():
+            if self.Receivedata:
                 # Calculate desired velocities using QP solutions
-                desired_velocity_cav1 = 0.7 #self.cav_info_cav1.vel.data + self.qp_solution_cav1.u * 0.05
-                lateral_error_cav1 = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2])/((self.main_path[0]**2+self.main_path[1]**2)**0.5)
-                steering_angle_cav1, self.e_prev_lateral_cav1, self.e_int_lateral_cav1 = self.pid_lateral_controller(lateral_error_cav1, self.e_prev_lateral_cav1, self.e_int_lateral_cav1)
-                actual_velocity_cav1 = 0.5 #self.cav_info_cav1.vel.data
-                control_input_cav1 = 0.4
-                #control_input_cav1, self.e_prev_longitudinal_cav1, self.e_int_longitudinal_cav1 = self.pid_longitudinal_controller(desired_velocity_cav1, actual_velocity_cav1, self.e_prev_longitudinal_cav1, self.e_int_longitudinal_cav1)
+                desired_velocity = self.qp_solution.u * 0.05  # Use control input from QP solution
+                lateral_error = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2]) / ((self.main_path[0]**2 + self.main_path[1]**2)**0.5)
+                steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
+                actual_velocity = self.velocity
+                control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
-                #Print control info for CAV1
-                print("lateral_error: ", lateral_error_cav1)
-                rospy.loginfo(f"CAV1 Control Info - Steering Angle: {steering_angle_cav1}, Desired Velocity: {desired_velocity_cav1}, Control Input: {control_input_cav1}")
+                  def run(self):
+        self.generate_map(self.isMain)
+        while not rospy.is_shutdown():
+            if self.Receivedata:
+                # Calculate desired velocities using QP solutions
+                desired_velocity = self.qp_solution.u*0.05  # Use control input from QP solution
+                lateral_error = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2]) / ((self.main_path[0]**2 + self.main_path[1]**2)**0.5)
+                steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
+                actual_velocity = self.velocity
+                control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
-                # Publish control info for CAV1
-                control_info_cav1 = ControlInfo()
-                control_info_cav1.steering_angle = steering_angle_cav1
-                control_info_cav1.desired_velocity = desired_velocity_cav1
-                control_info_cav1.control_input = control_input_cav1
-                self.control_info_pub_cav1.publish(control_info_cav1)
+                # Print control info
+                print("lateral_error: ", lateral_error)
+                rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
+
+                # Publish control info
+                control_info = ControlInfo()
+                control_info.steering_angle = steering_angle
+                control_info.desired_velocity = desired_velocity
+                control_info.control_input = control_input
+                self.control_info_pub.publish(control_info)
