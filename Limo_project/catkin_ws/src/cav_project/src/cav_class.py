@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+import time
 import numpy as np
 from cvxopt.solvers import qp
 import rospy
@@ -132,23 +133,22 @@ class CAV:
 
     def run(self):
         self.generate_map(self.isMain)
-        while not rospy.is_shutdown():
-            if self.Receivedata:
-                # Calculate desired velocities using QP solutions
-                desired_velocity = self.qp_solution * 0.05  # Use control input from QP solution
-                lateral_error = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2]) / ((self.main_path[0]**2 + self.main_path[1]**2)**0.5)
-                steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
-                actual_velocity = self.velocity
-                control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
+        
+        # Calculate desired velocities using QP solutions
+        desired_velocity = self.qp_solution.u * 0.05  # Use control input from QP solution
+        lateral_error = (self.main_path[0]*self.position_x + self.main_path[1]*self.position_z + self.main_path[2]) / ((self.main_path[0]**2 + self.main_path[1]**2)**0.5)
+        steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
+        actual_velocity = self.velocity
+        control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
 
-                # Print control info
-                print("lateral_error: ", lateral_error)
-                rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
+        # Print control info
+        print("lateral_error: ", lateral_error)
+        rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
 
-                # Publish control info
-                control_info = ControlInfo()
-                control_info.steering_angle = steering_angle
-                control_info.desired_velocity = desired_velocity
-                control_info.control_input = control_input
-                self.control_info_pub.publish(control_info)
+        # Publish control info
+        control_info = ControlInfo()
+        control_info.steering_angle = steering_angle
+        control_info.desired_velocity = desired_velocity
+        control_info.control_input = control_input
+        self.control_info_pub.publish(control_info)
