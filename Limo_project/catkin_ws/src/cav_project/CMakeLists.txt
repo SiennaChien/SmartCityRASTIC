@@ -58,6 +58,8 @@ add_message_files(
    limo_info_array.msg
    limo_info.msg
    QP_solution.msg
+   limo_state.msg
+   limo_state_matrix.msg
 )
 
 ## Generate services in the 'srv' folder

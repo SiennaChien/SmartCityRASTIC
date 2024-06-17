@@ -15,10 +15,10 @@ class CAV:
         self.ID = ID
         self.isMain = isMain
         #rospy.init_node('CAV' + self.ID, anonymous=True)
-        self.control_info_pub = rospy.Publisher('/control_info_' + self.ID, ControlInfo, queue_size=10)
         self.mocap_sub = rospy.Subscriber('/vrpn_client_node/' + self.ID + '/pose', PoseStamped, self.mocap_callback)
         self.qp_solution_sub = rospy.Subscriber('/qp_solution_' + self.ID, QP_solution, self.qp_solution_callback)
         self.cav_info_sub = rospy.Subscriber('/limo_info_' + self.ID, limo_info, self.cav_info_callback)
+        self.control_info_pub = rospy.Publisher('/control_info_'+ self.ID, ControlInfo, queue_size=10)
         self.rate = rospy.Rate(10)
 
         # PID state variables
