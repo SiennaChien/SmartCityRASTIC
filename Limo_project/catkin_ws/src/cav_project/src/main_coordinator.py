@@ -29,7 +29,7 @@ class MainCoordinator:
 
     def run(self):
 
-        cav1 = CAV("limo770", True)
+        cav1 = CAV("limo770", False)
         cav2 = CAV("limo155", True)
 
         while not rospy.is_shutdown():
