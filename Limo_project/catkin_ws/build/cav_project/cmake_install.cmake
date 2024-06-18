@@ -43,6 +43,8 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg"
     "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg"
     "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
+    "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
+    "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
     )
 endif()
 

@@ -9,5 +9,9 @@
    "LIMO_INFO"
    "<LIMO_INFO_ARRAY>"
    "LIMO_INFO_ARRAY"
+   "<LIMO_STATE>"
+   "LIMO_STATE"
+   "<LIMO_STATE_MATRIX>"
+   "LIMO_STATE_MATRIX"
   ))
 

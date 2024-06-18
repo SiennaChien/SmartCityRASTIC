@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/ControlInfo.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
+messages_str = "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/ControlInfo.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg;/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
 services_str = ""
 pkg_name = "cav_project"
 dependencies_str = "geometry_msgs;std_msgs"

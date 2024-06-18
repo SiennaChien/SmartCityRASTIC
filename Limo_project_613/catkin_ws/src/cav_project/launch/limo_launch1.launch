@@ -1,3 +1,0 @@
-<launch>
-    <node pkg="cav_project" type="limo_info_publisher.py" name="limo_info_publisher1" output="screen"/>
-</launch>

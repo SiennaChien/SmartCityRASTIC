@@ -57,6 +57,8 @@ cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Deskto
 cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h
 cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h
 cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/QP_solution.h
+cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state.h
+cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h
 
 
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/ControlInfo.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
@@ -68,17 +70,13 @@ cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Deskto
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg
-/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /opt/ros/noetic/share/std_msgs/msg/String.msg
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /opt/ros/noetic/share/std_msgs/msg/Float64.msg
-/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /opt/ros/noetic/share/std_msgs/msg/Int32.msg
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/CodesDell/Desktop/Limo_project/catkin_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating C++ code from cav_project/limo_info_array.msg"
 	cd /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project && /home/CodesDell/Desktop/Limo_project/catkin_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg -Icav_project:/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p cav_project -o /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project -e /opt/ros/noetic/share/gencpp/cmake/..
 
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h: /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg
-/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h: /opt/ros/noetic/share/std_msgs/msg/Int32.msg
-/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h: /opt/ros/noetic/share/std_msgs/msg/String.msg
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h: /opt/ros/noetic/share/std_msgs/msg/Float64.msg
 /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h: /opt/ros/noetic/share/gencpp/msg.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/CodesDell/Desktop/Limo_project/catkin_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating C++ code from cav_project/limo_info.msg"
@@ -90,11 +88,26 @@ cav_project/CMakeFiles/cav_project_generate_messages_cpp: /home/CodesDell/Deskto
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/CodesDell/Desktop/Limo_project/catkin_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating C++ code from cav_project/QP_solution.msg"
 	cd /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project && /home/CodesDell/Desktop/Limo_project/catkin_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg -Icav_project:/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p cav_project -o /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project -e /opt/ros/noetic/share/gencpp/cmake/..
 
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state.h: /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state.h: /opt/ros/noetic/share/gencpp/msg.h.template
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/CodesDell/Desktop/Limo_project/catkin_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Generating C++ code from cav_project/limo_state.msg"
+	cd /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project && /home/CodesDell/Desktop/Limo_project/catkin_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg -Icav_project:/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p cav_project -o /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project -e /opt/ros/noetic/share/gencpp/cmake/..
+
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h: /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h: /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg
+/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h: /opt/ros/noetic/share/gencpp/msg.h.template
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/CodesDell/Desktop/Limo_project/catkin_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Generating C++ code from cav_project/limo_state_matrix.msg"
+	cd /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project && /home/CodesDell/Desktop/Limo_project/catkin_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg -Icav_project:/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p cav_project -o /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project -e /opt/ros/noetic/share/gencpp/cmake/..
+
 cav_project_generate_messages_cpp: cav_project/CMakeFiles/cav_project_generate_messages_cpp
 cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/ControlInfo.h
 cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h
 cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h
 cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/QP_solution.h
+cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state.h
+cav_project_generate_messages_cpp: /home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h
 cav_project_generate_messages_cpp: cav_project/CMakeFiles/cav_project_generate_messages_cpp.dir/build.make
 
 .PHONY : cav_project_generate_messages_cpp
