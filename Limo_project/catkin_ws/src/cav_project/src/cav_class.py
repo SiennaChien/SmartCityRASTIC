@@ -22,6 +22,8 @@ class CAV:
         self.qp_solution_sub = rospy.Subscriber('/qp_solution_' + self.ID, QP_solution, self.qp_solution_callback)
         self.cav_info_sub = rospy.Subscriber('/limo_info_' + self.ID, limo_info, self.cav_info_callback)
         self.rate = rospy.Rate(10)
+        self.generate_map(self.isMain)
+
 
         # PID state variables
         self.qp_solution = QP_solution()
@@ -135,7 +137,6 @@ class CAV:
         return control_input, error, e_int
 
     def run(self):
-        self.generate_map(self.isMain)
         # Calculate desired velocities using QP solutions
         actual_velocity = self.velocity
         desired_velocity =actual_velocity + self.qp_solution.u* 0.1  # Use control input from QP solution
