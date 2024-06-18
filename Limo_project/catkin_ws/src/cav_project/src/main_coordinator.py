@@ -21,12 +21,10 @@ class MainCoordinator:
     def run(self):
         cav1 = CAV("limo770", False)
         cav2 = CAV("limo155", True)
-        cav3 = CAV("limo795", True)
-
         self.rate.sleep()
 
 
-        order_list = [{"cav_name": cav1, "current": 0}, {"cav_name": cav2, "current": 0},{"cav_name": cav3, "current": 0}]
+        order_list = [{"cav_name": cav1, "current": 0}, {"cav_name": cav2, "current": 0}]
         search_info = []
 
         for i in range(len(order_list)):
@@ -48,15 +46,11 @@ class MainCoordinator:
                 limo_state_msg = calc_qp_info(search_info, i)
                 limo_state_mat.limos.append(limo_state_msg)
             self.limo_state_matrix_pub.publish(limo_state_mat)
+            if True: #self.qp_solution_cav1 and self.qp_solution_cav2 and self.cav_info_cav1 and self.cav_info_cav2:
+                cav1.run()
+                cav2.run()
+                self.rate.sleep()
 
-
-
-
-        # while not rospy.is_shutdown():
-        #     #if True: #self.qp_solution_cav1 and self.qp_solution_cav2 and self.cav_info_cav1 and self.cav_info_cav2:
-        #         cav1.run()
-        #         cav2.run()
-        #         self.rate.sleep()
 
 if __name__ == '__main__':
     coordinator = MainCoordinator()

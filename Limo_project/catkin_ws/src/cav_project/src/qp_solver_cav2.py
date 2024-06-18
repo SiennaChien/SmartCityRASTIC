@@ -3,7 +3,7 @@ import math
 import rospy
 import numpy as np
 from std_msgs.msg import Float64, Bool, Float64MultiArray, String
-from cav_project.msg import limo_info, limo_info_array, QP_solution
+from cav_project.msg import limo_info, limo_info_array, QP_solution, limo_state, limo_state_matrix
 from cvxopt import matrix, solvers
 from cvxopt.solvers import qp
 from geometry_msgs.msg import PoseStamped
@@ -24,6 +24,7 @@ class OtherCAV:
         self.d1 = 0
         self.mocap_sub_other_cav = rospy.Subscriber('/vrpn_client_node/' + self.otherID + '/pose', PoseStamped, self.mocap_callback_other)
         self.other_cav_info_sub = rospy.Subscriber('/limo_info_' + self.otherID, limo_info, self.other_cav_info_callback)
+
 
     def mocap_callback_other(self, msg):
         self.pose = msg.pose
@@ -63,6 +64,8 @@ class QPSolverCAV2:
         self.cav_info_sub = rospy.Subscriber('/limo_info_' + self.ID, limo_info, self.cav_info_callback)
         self.mocap_sub_cav = rospy.Subscriber('/vrpn_client_node/' + self.ID + '/pose', PoseStamped, self.mocap_callback)
         self.qp_solution_pub = rospy.Publisher('/qp_solution_' + self.ID, QP_solution, queue_size=1)
+        self.limo_state_mat_sub = rospy.Subscriber('/limo_state_matrix', limo_state_matrix, self.limo_state_mat_callback)
+
 
         # Create an OtherCAV instance for the main other CAV
         self.other_cav = OtherCAV(self.otherID, self.merging_pt_x, self.merging_pt_y)
@@ -124,6 +127,10 @@ class QPSolverCAV2:
     def calc_distance(self, x_1, y_1, x_2, y_2):
         # Calculate the Euclidean distance between two points
         return np.sqrt((x_2 - x_1)**2 + (y_2 - y_1)**2)
+
+    def limo_state_mat_callback(self, msg):
+        #get info from message, store into data structure
+        A = 0
 
     def mocap_callback(self, msg):
         # Update pose of CAV
