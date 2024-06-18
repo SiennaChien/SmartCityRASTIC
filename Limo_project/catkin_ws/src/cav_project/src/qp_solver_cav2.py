@@ -252,10 +252,10 @@ class QPSolverCAV2:
         u, a, b = solveQP()
 
         if u is not None:
-            print(f"QP Solution: u = {u}")
+            #print(f"QP Solution: u = {u}")
             return u
         else:
-            print("QP Solution not found.")
+            #print("QP Solution not found.")
             return None
 
     def recalc_qp(self):
@@ -267,7 +267,7 @@ class QPSolverCAV2:
         qp_solution_msg = QP_solution()
         qp_solution_msg.u = float(u)  # Ensure u is a float
         self.qp_solution_pub.publish(qp_solution_msg)
-        print(f"Published QP Solution: u = {u}")
+        #print(f"Published QP Solution: u = {u}")
 
     def publish_control(self):
         rospy.init_node('qp_solver_cav2', anonymous=True)
