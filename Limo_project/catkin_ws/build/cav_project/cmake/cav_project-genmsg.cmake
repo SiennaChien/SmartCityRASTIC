@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.cmake.em
 
-message(STATUS "cav_project: 4 messages, 0 services")
+message(STATUS "cav_project: 6 messages, 0 services")
 
 set(MSG_I_FLAGS "-Icav_project:/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg;-Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg;-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg")
 
@@ -24,17 +24,27 @@ add_custom_target(_cav_project_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg" NAME_WE)
 add_custom_target(_cav_project_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg" "cav_project/limo_info:std_msgs/String:std_msgs/Float64:std_msgs/Int32"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg" "cav_project/limo_info:std_msgs/Float64"
 )
 
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg" NAME_WE)
 add_custom_target(_cav_project_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg" "std_msgs/Int32:std_msgs/String:std_msgs/Float64"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg" "std_msgs/Float64"
 )
 
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" NAME_WE)
 add_custom_target(_cav_project_generate_messages_check_deps_${_filename}
   COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" ""
+)
+
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" NAME_WE)
+add_custom_target(_cav_project_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" ""
+)
+
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" NAME_WE)
+add_custom_target(_cav_project_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "cav_project" "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" "cav_project/limo_state"
 )
 
 #
@@ -52,19 +62,31 @@ _generate_msg_cpp(cav_project
 _generate_msg_cpp(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg"
   "${MSG_I_FLAGS}"
-  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/cav_project
 )
 _generate_msg_cpp(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/cav_project
 )
 _generate_msg_cpp(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
   "${MSG_I_FLAGS}"
   ""
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/cav_project
+)
+_generate_msg_cpp(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/cav_project
+)
+_generate_msg_cpp(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
+  "${MSG_I_FLAGS}"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/cav_project
 )
 
@@ -90,6 +112,10 @@ get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws
 add_dependencies(cav_project_generate_messages_cpp _cav_project_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" NAME_WE)
 add_dependencies(cav_project_generate_messages_cpp _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_cpp _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_cpp _cav_project_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(cav_project_gencpp)
@@ -109,19 +135,31 @@ _generate_msg_eus(cav_project
 _generate_msg_eus(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg"
   "${MSG_I_FLAGS}"
-  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/cav_project
 )
 _generate_msg_eus(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/cav_project
 )
 _generate_msg_eus(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
   "${MSG_I_FLAGS}"
   ""
+  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/cav_project
+)
+_generate_msg_eus(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/cav_project
+)
+_generate_msg_eus(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
+  "${MSG_I_FLAGS}"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/cav_project
 )
 
@@ -147,6 +185,10 @@ get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws
 add_dependencies(cav_project_generate_messages_eus _cav_project_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" NAME_WE)
 add_dependencies(cav_project_generate_messages_eus _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_eus _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_eus _cav_project_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(cav_project_geneus)
@@ -166,19 +208,31 @@ _generate_msg_lisp(cav_project
 _generate_msg_lisp(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg"
   "${MSG_I_FLAGS}"
-  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/cav_project
 )
 _generate_msg_lisp(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/cav_project
 )
 _generate_msg_lisp(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
   "${MSG_I_FLAGS}"
   ""
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/cav_project
+)
+_generate_msg_lisp(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/cav_project
+)
+_generate_msg_lisp(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
+  "${MSG_I_FLAGS}"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/cav_project
 )
 
@@ -204,6 +258,10 @@ get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws
 add_dependencies(cav_project_generate_messages_lisp _cav_project_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" NAME_WE)
 add_dependencies(cav_project_generate_messages_lisp _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_lisp _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_lisp _cav_project_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(cav_project_genlisp)
@@ -223,19 +281,31 @@ _generate_msg_nodejs(cav_project
 _generate_msg_nodejs(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg"
   "${MSG_I_FLAGS}"
-  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/cav_project
 )
 _generate_msg_nodejs(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/cav_project
 )
 _generate_msg_nodejs(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
   "${MSG_I_FLAGS}"
   ""
+  ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/cav_project
+)
+_generate_msg_nodejs(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/cav_project
+)
+_generate_msg_nodejs(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
+  "${MSG_I_FLAGS}"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/cav_project
 )
 
@@ -261,6 +331,10 @@ get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws
 add_dependencies(cav_project_generate_messages_nodejs _cav_project_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" NAME_WE)
 add_dependencies(cav_project_generate_messages_nodejs _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_nodejs _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_nodejs _cav_project_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(cav_project_gennodejs)
@@ -280,19 +354,31 @@ _generate_msg_py(cav_project
 _generate_msg_py(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info_array.msg"
   "${MSG_I_FLAGS}"
-  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/cav_project
 )
 _generate_msg_py(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Int32.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/String.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Float64.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/cav_project
 )
 _generate_msg_py(cav_project
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg"
   "${MSG_I_FLAGS}"
   ""
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/cav_project
+)
+_generate_msg_py(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/cav_project
+)
+_generate_msg_py(cav_project
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg"
+  "${MSG_I_FLAGS}"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/cav_project
 )
 
@@ -317,6 +403,10 @@ add_dependencies(cav_project_generate_messages_py _cav_project_generate_messages
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_info.msg" NAME_WE)
 add_dependencies(cav_project_generate_messages_py _cav_project_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/QP_solution.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_py _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state.msg" NAME_WE)
+add_dependencies(cav_project_generate_messages_py _cav_project_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/CodesDell/Desktop/Limo_project/catkin_ws/src/cav_project/msg/limo_state_matrix.msg" NAME_WE)
 add_dependencies(cav_project_generate_messages_py _cav_project_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

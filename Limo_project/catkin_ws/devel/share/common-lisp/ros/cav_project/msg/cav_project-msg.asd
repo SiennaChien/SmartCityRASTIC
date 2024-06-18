@@ -13,4 +13,8 @@
     (:file "_package_limo_info" :depends-on ("_package"))
     (:file "limo_info_array" :depends-on ("_package_limo_info_array"))
     (:file "_package_limo_info_array" :depends-on ("_package"))
+    (:file "limo_state" :depends-on ("_package_limo_state"))
+    (:file "_package_limo_state" :depends-on ("_package"))
+    (:file "limo_state_matrix" :depends-on ("_package_limo_state_matrix"))
+    (:file "_package_limo_state_matrix" :depends-on ("_package"))
   ))

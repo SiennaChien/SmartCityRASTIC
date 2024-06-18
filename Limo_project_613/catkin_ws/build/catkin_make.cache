@@ -1,2 +1,0 @@
-cav_project
--DCATKIN_DEVEL_PREFIX=/home/CodesDell/Desktop/Limo_project/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/CodesDell/Desktop/Limo_project/catkin_ws/install -G Unix Makefiles

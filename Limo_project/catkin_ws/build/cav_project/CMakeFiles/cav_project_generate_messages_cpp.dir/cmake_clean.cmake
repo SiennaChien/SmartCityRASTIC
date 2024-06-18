@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/QP_solution.h"
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info.h"
   "/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_info_array.h"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state.h"
+  "/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/include/cav_project/limo_state_matrix.h"
   "CMakeFiles/cav_project_generate_messages_cpp"
 )
 
