@@ -1,4 +1,4 @@
-from cav_project.msg import limo_state
+from cav_project.msg import limo_state, limo_state_matrix
 from cav_class import CAV
 
 def search_ahead(search_info, limo_num):
@@ -8,6 +8,8 @@ def search_ahead(search_info, limo_num):
             break
         else:
             front_limo = -1
+    if limo_num == 0:
+        return -1
     return front_limo
 
 def search_previous(limo_num):
@@ -23,31 +25,35 @@ def calc_qp_info(search_info, limo_num):
     previous_num = search_previous(limo_num)
 
     collision_pt = search_info[limo_num]["current_end_pt"]
-    starting_pt = search_info[limo_num]["current_starting_pt"]
+    starting_pt = search_info[limo_num]["current_start_pt"]
 
-    dk = calc_distance(search_info[previous_limo]["current_pos"][0], search_info[previous_limo]["current_pos"][1], collision_pt[0], collision_pt[1])
+    dk = calc_distance(search_info[previous_num]["current_pos"][0], search_info[previous_num]["current_pos"][1], collision_pt[0], collision_pt[1])
     di = calc_distance(search_info[limo_num]["current_pos"][0], search_info[limo_num]["current_pos"][1], collision_pt[0], collision_pt[1])
     d2 = di - dk
-    d1 = calc_distance(search_info[limo_num]["current_pos"][0], search_info[limo_num]["current_pos"][1], search_info[front_limo]["current_pos"][0], search_info[front_limo]["current_pos"][1])
+    d1 = calc_distance(search_info[limo_num]["current_pos"][0], search_info[limo_num]["current_pos"][1], search_info[front_num]["current_pos"][0], search_info[front_num]["current_pos"][1])
     d0 = calc_distance(search_info[limo_num]["current_pos"][0], search_info[limo_num]["current_pos"][1], starting_pt[0], starting_pt[1])
 
+    current_cav = search_info[limo_num]["cav_object"]
     if previous_num == -1:
         d2 = -1
     if front_num == -1:
         d1 = -1
-    
-    current_cav = search_info[limo_num]["cav_name"]
-    front_cav = search_info[front_num]["cav_name"]
-    previous_cav = search_info[previous_num]["cav_name"]
 
-    limo_state = limo_state()
-    limo_state.limoID = current_cav.ID
-    limo_state.vel = current_cav.velocity
-    limo_state.d0 = d0
-    limo_state.d1 = d1
-    limo_state.v1 = front_cav.velocity
-    limo_state.d2 = d2
-    limo_state.v2 = previous_cav.velocity
+    limo_state_msg = limo_state()
+    limo_state_msg.limoID = current_cav.ID
+    limo_state_msg.vel = current_cav.velocity
+    limo_state_msg.d0 = d0
+    limo_state_msg.d1 = d1
+    if front_num > -1:
+        limo_state_msg.v1 = search_info[front_num]["cav_object"].velocity
+    else:
+        limo_state_msg.v1 = -1
+
+    limo_state_msg.d2 = d2
+    if previous_num > -1:
+        limo_state_msg.v2 = search_info[previous_num]["cav_object"].velocity
+    else:
+        limo_state_msg.v2 = -1
 
 
-    return limo_state
+    return limo_state_msg

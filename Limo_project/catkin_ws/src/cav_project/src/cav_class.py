@@ -58,10 +58,9 @@ class CAV:
         self.position_y = msg.pose.position.y * 1000
         self.position_yaw = 0
         self.Receivedata = 1
-
     def qp_solution_callback(self, msg):
         self.qp_solution = msg
-        print("qp solution callback function was called")
+        #print("qp solution callback function was called")
 
     def cav_info_callback(self, msg):
         self.cav_info = msg
@@ -147,8 +146,8 @@ class CAV:
 
 
         # Print control info
-        print("lateral_error: ", lateral_error)
-        rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
+        #print("lateral_error: ", lateral_error)
+        #rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
 
         # Publish control info
         control_info = ControlInfo()
