@@ -21,10 +21,12 @@ class MainCoordinator:
     def run(self):
         cav1 = CAV("limo770", False)
         cav2 = CAV("limo155", True)
+        #cav3 = CAV("limo795", True)
+
         self.rate.sleep()
 
 
-        order_list = [{"cav_name": cav1, "current": 0}, {"cav_name": cav2, "current": 0}]
+        order_list = [{"cav_name": cav1, "current": 0}, {"cav_name": cav2, "current": 0}]#, {"cav_name": cav3, "current": 0}]
         search_info = []
 
         for i in range(len(order_list)):
@@ -51,6 +53,14 @@ class MainCoordinator:
                 cav2.run()
                 self.rate.sleep()
 
+
+
+# if len(limo_state_matrix_msg.limos) > 0:
+#     # Access the d2 value of the first limo in the limos array
+#     d2_value = limo_state_matrix_msg.limos[0].d2
+#     print("d2 value of the first limo:", d2_value)
+# else:
+#     print("No limos available in limo_state_matrix_msg")
 
 if __name__ == '__main__':
     coordinator = MainCoordinator()
