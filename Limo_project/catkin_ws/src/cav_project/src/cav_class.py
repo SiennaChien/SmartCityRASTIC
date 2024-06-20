@@ -109,11 +109,11 @@ class CAV:
         self.merging_pt_activation_range = (self.lane_width * 1, self.lane_width / 2)
 
         #PID values of each line, each element is a tuple (kp, ki, kd)
-        self.merge_path_PID = (-0.00003, -0.00004, -0.0005)
-        self.main_path_PID = (-0.00003, -0.00004, -0.0005)
-        self.return_first_PID = (-0.00003, -0.00004, -0.0005)
-        self.return_second_PID = (-0.00003, -0.00004, -0.0005)
-        self.return_third_PID = (-0.00003, -0.00004, -0.0005)
+        self.merge_path_PID = (0.0005, 0.00004, 0.001) #0.0005, -0.00005, -0.001)
+        self.main_path_PID = (0.00003, 0.00004, 0.0005)
+        self.return_first_PID = (0.00003, 0.00004, 0.0005)
+        self.return_second_PID = (0.00003, 0.00004, 0.0005)
+        self.return_third_PID = (0.00003, 0.00004, 0.0005)
 
         #PID values of each circle, each element is a tuple (kp, ki, kd)
         self.right_bottom_circle_PID = (-0.50, -0.00045, -0.037)
@@ -148,7 +148,7 @@ class CAV:
             self.ranges = [self.right_bottom_activation_range, self.merging_pt_activation_range, \
                            self.left_center_activation_range, self.left_top_activation_range, self.right_top_activation_range]
             self.circles = [self.right_bottom_circle, self.merging_circle, self.left_center_circle, self.left_top_circle, self. right_top_circle]
-            self.curve_PIDs = [self.right_bottom_circle_PID, self.right_merging_circle_PID, self.left_center_circle_PID, self.left_top_circle_PID, self.right_top_circle_PID]
+            self.curve_PIDs = [self.right_bottom_circle_PID, self.merging_circle_PID, self.left_center_circle_PID, self.left_top_circle_PID, self.right_top_circle_PID]
 
 
     def generate_line(self, x1, y1, x2, y2):
@@ -181,35 +181,37 @@ class CAV:
 
     def run(self):
         self.kp, self.ki, self.kd = self.PIDs[self.current]
-        current_line = self.lines[self.current]
-        current_end_pt = self.points[self.next]
-        
-        #if the cav is near a critical point (which are turning corners), set path to a circle, change starting point and PID values to fit
-        if abs(self.position_x  - current_end_pt[0])  < self.ranges[self.next][0] and \
-            abs(self.position_z - current_end_pt[1]) < self.ranges[self.next][1] and \
-            current_end_pt[0] != self.merging_pt_x and current_end_pt[1] != self.merging_pt_y:
+        self.current_line = self.lines[self.current]
+        self.current_end_pt = self.points[self.next]
 
+        #if the cav is near a critical point (which are turning corners), set path to a circle, change starting point and PID values to fit
+        if abs(self.position_x  - self.current_end_pt[0])  < self.ranges[self.next][0] and \
+            abs(self.position_z - self.current_end_pt[1]) < self.ranges[self.next][1] and \
+            self.current_end_pt[0] != self.merging_pt_x and self.current_end_pt[1] != self.merging_pt_y:
             self.within_critical_range = True
             self.line_changed = False
             self.kp, self.ki, self.kd = self.curve_PIDs[self.next]
             lateral_error = (((self.position_x - self.circles[self.next][0])**2 + (self.position_z - self.circles[self.next][1])**2)**0.5 - self.circles[self.next][2])
+            print(self.ID, "in corner", lateral_error)
 
         #if a merging cav is near the merging point, switch to main path
-        elif abs(self.position_x  - current_end_pt[0])  < self.ranges[self.next][0] and \
-            abs(self.position_z - current_end_pt[1]) < self.ranges[self.next][1] and\
-            current_end_pt[0] == self.merging_pt_x and current_end_pt[1] == self.merging_pt_y:
-            
+        elif abs(self.position_x  - self.current_end_pt[0])  < self.ranges[self.next][0] and \
+            abs(self.position_z - self.current_end_pt[1]) < self.ranges[self.next][1] and\
+            self.current_end_pt[0] == self.merging_pt_x and self.current_end_pt[1] == self.merging_pt_y:
+
             self.within_critical_range = True
             self.line_changed = False
-            current_line = self.lines[self.next]
+            self.current_line = self.lines[self.next]
             self.kp, self.ki, self.kd = self.curve_PIDs[self.next]
-            lateral_error = -(current_line[0]*self.position_x + current_line[1]*self.position_z + current_line[2])/((current_line[0]**2 + current_line[1]**2)**0.5)
+            lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
+            print(self.ID, "merging", lateral_error)
 
         #when the cav is on a straight path
         else:
             self.within_critical_range = False
             self.current_line = self.lines[self.current]
-            lateral_error = -(current_line[0]*self.position_x + current_line[1]*self.position_z + current_line[2])/((current_line[0]**2 + current_line[1]**2)**0.5)
+            lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
+            print(self.ID, "out of corner", lateral_error)
 
         #once out of the turning point, follow the next line
         if not self.line_changed and not self.within_critical_range:
@@ -217,21 +219,20 @@ class CAV:
             self.next = (self.next+1) % len(self.lines)
             self.line_changed = True
             self.within_critical_range = False
-            current_line = self.lines[self.current]
-            current_end_pt = self.points[self.next]
+            self.current_line = self.lines[self.current]
+            self.current_end_pt = self.points[self.next]
             self.kp, self.ki, self.kd = self.PIDs[self.current]
             self.e_prev_lateral= 0
             self.e_int_lateral = 0
-            lateral_error = -(current_line[0]*self.position_x + current_line[1]*self.position_z + current_line[2])/((current_line[0]**2 + current_line[1]**2)**0.5)
-
+            lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
         #calculate steering and publisher to the listener node on the limo
         actual_velocity = self.velocity
-        desired_velocity = actual_velocity + self.qp_solution.u* 0.1  # Use control input from QP solution
+        desired_velocity = 0.5 #actual_velocity + self.qp_solution.u* 0.1  # Use control input from QP solution
         steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
 
         control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
-        #print("lateral_error: ", lateral_error)
+        #print("lateral_error of", self.ID, lateral_error)
         #rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
 
         # Publish control info
