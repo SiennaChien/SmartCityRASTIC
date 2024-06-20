@@ -22,7 +22,6 @@ class MainCoordinator:
         cav1 = CAV("limo770", False)
         cav2 = CAV("limo155", True)
         #cav3 = CAV("limo795", True)
-
         self.rate.sleep()
 
 
