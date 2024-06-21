@@ -93,30 +93,30 @@ class CAV:
         self.off_path = self.generate_line(self.right_top_x, self.right_top_y, self.right_bottom_x, self.right_bottom_y) #return third to off path
 
         #data points that characterize each circle for the corners - center x, center y, radius. Each variable is a tuple (A, B, C)
-        self.right_top_circle = (self.right_top_x - self.lane_width, self.right_top_y - self.lane_width, self.lane_width)
-        self.right_center_circle = (self.right_center_x + self.lane_width, self.right_center_y - self.lane_width, self.lane_width)
+        self.right_top_circle = (self.right_top_x - self.lane_width, self.right_top_y - self.lane_width, self.lane_width/1.5)
+        self.right_center_circle = (self.right_center_x + self.lane_width, self.right_center_y - self.lane_width, self.lane_width/1.5)
         self.right_bottom_circle = (self.right_bottom_x + self.lane_width, self.right_bottom_y - self.lane_width, self.lane_width/2)
-        self.left_top_circle = (self.left_top_x - self.lane_width, self.left_top_y + self.lane_width, self.lane_width)
-        self.left_center_circle = (self.left_center_x + self.lane_width, self.left_center_y + self.lane_width, self.lane_width)
+        self.left_top_circle = (self.left_top_x - self.lane_width, self.left_top_y + self.lane_width, self.lane_width/1.5)
+        self.left_center_circle = (self.left_center_x + self.lane_width, self.left_center_y + self.lane_width, self.lane_width/1.2)
         self.merging_circle = (self.merging_pt_x + self.lane_width, self.merging_pt_y - self.lane_width, self.lane_width) #in practice this is not use
 
         #the ranges near each corner that activates the circle path for the limo to follow
-        self.right_top_activation_range = (self.lane_width / 1.3, self.lane_width * 1.1)
-        self.right_center_activation_range = (self.lane_width * 1.1, self.lane_width)
-        self.right_bottom_activation_range = (self.lane_width * 1.2, self.lane_width)
-        self.left_top_activation_range = (self.lane_width * 1.1, self.lane_width / 1.7)
-        self.left_center_activation_range = (self.lane_width / 1.5, self.lane_width * 1)
-        self.merging_pt_activation_range = (self.lane_width * 1, self.lane_width / 2)
+        self.right_top_activation_range = (self.lane_width *1, self.lane_width * 1.1)
+        self.right_center_activation_range = (self.lane_width * 1, self.lane_width * 1)
+        self.right_bottom_activation_range = (self.lane_width * 1, self.lane_width*1.4)
+        self.left_top_activation_range = (self.lane_width * 1.1, self.lane_width / 1.3)
+        self.left_center_activation_range = (self.lane_width / 1.5, self.lane_width * 1.2)
+        self.merging_pt_activation_range = (self.lane_width, self.lane_width / 1.7)
 
         #PID values of each line, each element is a tuple (kp, ki, kd)
-        self.merge_path_PID = (0.0005, 0.00004, 0.001) #0.0005, -0.00005, -0.001)
-        self.main_path_PID = (0.00003, 0.00004, 0.0005)
-        self.return_first_PID = (0.00003, 0.00004, 0.0005)
-        self.return_second_PID = (0.00003, 0.00004, 0.0005)
-        self.return_third_PID = (0.00003, 0.00004, 0.0005)
+        self.merge_path_PID = (0.0006, 0.00002, 0.001) #0.0005, -0.00005, -0.001)
+        self.main_path_PID = (0.0006, 0.00002, 0.001)
+        self.return_first_PID = (0.0005, 0.00002, 0.001)
+        self.return_second_PID = (0.0005, 0.00002, 0.001)
+        self.return_third_PID = (0.0006 , 0.00002, 0.001)# values from tuuning qith qp node 0.00003, 0.00004, 0.0005
 
         #PID values of each circle, each element is a tuple (kp, ki, kd)
-        self.right_bottom_circle_PID = (-0.50, -0.00045, -0.037)
+        self.right_bottom_circle_PID = (-0.050, -0.00045, -0.037)
         self.right_center_circle_PID = (-0.0030, -0.000045, -0.0017)
         self.left_center_circle_PID = (-0.56, -0.00045, -0.037)
         self.left_top_circle_PID = (-0.60, -0.045, -0.050)
@@ -202,7 +202,7 @@ class CAV:
             self.within_critical_range = True
             self.line_changed = False
             self.current_line = self.lines[self.next]
-            self.kp, self.ki, self.kd = self.curve_PIDs[self.next]
+            self.kp, self.ki, self.kd = self.PIDs[self.next]
             lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
             print(self.ID, "merging", lateral_error)
 
