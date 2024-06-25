@@ -38,6 +38,8 @@ def calc_qp_info(search_info, limo_num):
         d2 = -1
     if front_num == -1:
         d1 = -1
+    if previous_num == front_num:
+        d2 = -1
 
     limo_state_msg = limo_state()
     limo_state_msg.limoID = current_cav.ID
