@@ -20,6 +20,14 @@ def calc_distance(x1, y1, x2, y2):
     distance = ((x1 - x2) ** 2 + (y1 - y2) ** 2) ** 0.5
     return distance
 
+def calc_manhattan_distance(search_info, limo_num, front_num):
+    difference = search_info[front_num]["cav_object"].current - search_info[limo_num]["cav_object"].current
+
+    distance = calc_distance()
+    for i in range difference
+
+    return distance
+
 def calc_qp_info(search_info, limo_num):
     front_num = search_ahead(search_info, limo_num)
     previous_num = search_previous(limo_num)
@@ -40,6 +48,8 @@ def calc_qp_info(search_info, limo_num):
         d1 = -1
     if previous_num == front_num:
         d2 = -1
+    if search_info[limo_num]["current_end_pt"] != search_info[previous_limo]["current_end_pt"]:
+        imo_state_msg.limoID = -1
 
     limo_state_msg = limo_state()
     limo_state_msg.limoID = current_cav.ID
