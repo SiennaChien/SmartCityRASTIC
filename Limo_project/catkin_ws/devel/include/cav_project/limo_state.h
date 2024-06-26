@@ -30,7 +30,8 @@ struct limo_state_
     , d1(0.0)
     , v1(0.0)
     , d2(0.0)
-    , v2(0.0)  {
+    , v2(0.0)
+    , vd(0.0)  {
     }
   limo_state_(const ContainerAllocator& _alloc)
     : limoID(_alloc)
@@ -39,7 +40,8 @@ struct limo_state_
     , d1(0.0)
     , v1(0.0)
     , d2(0.0)
-    , v2(0.0)  {
+    , v2(0.0)
+    , vd(0.0)  {
   (void)_alloc;
     }
 
@@ -65,6 +67,9 @@ struct limo_state_
 
    typedef double _v2_type;
   _v2_type v2;
+
+   typedef double _vd_type;
+  _vd_type vd;
 
 
 
@@ -101,7 +106,8 @@ bool operator==(const ::cav_project::limo_state_<ContainerAllocator1> & lhs, con
     lhs.d1 == rhs.d1 &&
     lhs.v1 == rhs.v1 &&
     lhs.d2 == rhs.d2 &&
-    lhs.v2 == rhs.v2;
+    lhs.v2 == rhs.v2 &&
+    lhs.vd == rhs.vd;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -158,12 +164,12 @@ struct MD5Sum< ::cav_project::limo_state_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "097546323ecb5d049eb661f134c02c13";
+    return "a1fba4736fa7b1723499e2717d3f0429";
   }
 
   static const char* value(const ::cav_project::limo_state_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x097546323ecb5d04ULL;
-  static const uint64_t static_value2 = 0x9eb661f134c02c13ULL;
+  static const uint64_t static_value1 = 0xa1fba4736fa7b172ULL;
+  static const uint64_t static_value2 = 0x3499e2717d3f0429ULL;
 };
 
 template<class ContainerAllocator>
@@ -189,6 +195,7 @@ struct Definition< ::cav_project::limo_state_<ContainerAllocator> >
 "float64 v1\n"
 "float64 d2\n"
 "float64 v2\n"
+"float64 vd\n"
 ;
   }
 
@@ -214,6 +221,7 @@ namespace serialization
       stream.next(m.v1);
       stream.next(m.d2);
       stream.next(m.v2);
+      stream.next(m.vd);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -246,6 +254,8 @@ struct Printer< ::cav_project::limo_state_<ContainerAllocator> >
     Printer<double>::stream(s, indent + "  ", v.d2);
     s << indent << "v2: ";
     Printer<double>::stream(s, indent + "  ", v.v2);
+    s << indent << "vd: ";
+    Printer<double>::stream(s, indent + "  ", v.vd);
   }
 };
 

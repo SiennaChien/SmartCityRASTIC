@@ -25,6 +25,7 @@ class limo_state {
       this.v1 = null;
       this.d2 = null;
       this.v2 = null;
+      this.vd = null;
     }
     else {
       if (initObj.hasOwnProperty('limoID')) {
@@ -69,6 +70,12 @@ class limo_state {
       else {
         this.v2 = 0.0;
       }
+      if (initObj.hasOwnProperty('vd')) {
+        this.vd = initObj.vd
+      }
+      else {
+        this.vd = 0.0;
+      }
     }
   }
 
@@ -88,6 +95,8 @@ class limo_state {
     bufferOffset = _serializer.float64(obj.d2, buffer, bufferOffset);
     // Serialize message field [v2]
     bufferOffset = _serializer.float64(obj.v2, buffer, bufferOffset);
+    // Serialize message field [vd]
+    bufferOffset = _serializer.float64(obj.vd, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -109,13 +118,15 @@ class limo_state {
     data.d2 = _deserializer.float64(buffer, bufferOffset);
     // Deserialize message field [v2]
     data.v2 = _deserializer.float64(buffer, bufferOffset);
+    // Deserialize message field [vd]
+    data.vd = _deserializer.float64(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
     let length = 0;
     length += _getByteLength(object.limoID);
-    return length + 52;
+    return length + 60;
   }
 
   static datatype() {
@@ -125,7 +136,7 @@ class limo_state {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '097546323ecb5d049eb661f134c02c13';
+    return 'a1fba4736fa7b1723499e2717d3f0429';
   }
 
   static messageDefinition() {
@@ -138,6 +149,7 @@ class limo_state {
     float64 v1
     float64 d2
     float64 v2
+    float64 vd
     
     `;
   }
@@ -195,6 +207,13 @@ class limo_state {
     }
     else {
       resolved.v2 = 0.0
+    }
+
+    if (msg.vd !== undefined) {
+      resolved.vd = msg.vd;
+    }
+    else {
+      resolved.vd = 0.0
     }
 
     return resolved;

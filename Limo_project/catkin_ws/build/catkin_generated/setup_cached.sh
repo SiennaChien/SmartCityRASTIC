@@ -7,11 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/CodesDell/Desktop/Limo_project/catkin_ws/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/lib:$LD_LIBRARY_PATH"
-export PATH='/opt/ros/noetic/bin:/home/CodesDell/anaconda3/bin:/home/CodesDell/anaconda3/condabin:/home/CodesDell/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin'
-export PKG_CONFIG_PATH="/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/CodesDell/Desktop/Limo_project/catkin_ws/build'
-export PYTHONPATH="/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/lib/python3/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES='/home/CodesDell/Desktop/Limo_project/catkin_ws/devel/share/common-lisp'
-export ROS_PACKAGE_PATH="/home/CodesDell/Desktop/Limo_project/catkin_ws/src:$ROS_PACKAGE_PATH"

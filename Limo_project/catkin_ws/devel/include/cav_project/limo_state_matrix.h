@@ -123,12 +123,12 @@ struct MD5Sum< ::cav_project::limo_state_matrix_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "8726c45313017f9857b70bc15ddc333f";
+    return "740144a5e7a0faac2a90d0ea5a472a9f";
   }
 
   static const char* value(const ::cav_project::limo_state_matrix_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x8726c45313017f98ULL;
-  static const uint64_t static_value2 = 0x57b70bc15ddc333fULL;
+  static const uint64_t static_value1 = 0x740144a5e7a0faacULL;
+  static const uint64_t static_value2 = 0x2a90d0ea5a472a9fULL;
 };
 
 template<class ContainerAllocator>
@@ -158,6 +158,7 @@ struct Definition< ::cav_project::limo_state_matrix_<ContainerAllocator> >
 "float64 v1\n"
 "float64 d2\n"
 "float64 v2\n"
+"float64 vd\n"
 ;
   }
 

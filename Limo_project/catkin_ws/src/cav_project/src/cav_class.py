@@ -65,8 +65,6 @@ class CAV:
         self.Receivedata = 1
     def qp_solution_callback(self, msg):
         self.qp_solution = msg
-        #print(self.qp_solution.u)
-        print("CALLBACK")
 
     def cav_info_callback(self, msg):
         self.cav_info = msg
@@ -112,8 +110,8 @@ class CAV:
         self.merging_pt_activation_range = (self.lane_width, self.lane_width / 1.6)
 
         #PID values of each line, each element is a tuple (kp, ki, kd)
-        self.merge_path_PID = (0.0006, 0.00002, 0.001) #0.0005, -0.00005, -0.001)
-        self.main_path_PID = (0.0006, 0.00002, 0.001)
+        self.merge_path_PID = (0.00018, 0.00018, 0.003) #0.0005, -0.00005, -0.001)
+        self.main_path_PID = (0.0002, 0.00005, 0.001)
         self.return_first_PID = (0.0005, 0.00002, 0.001)
         self.return_second_PID = (0.0005, 0.00002, 0.001)
         self.return_third_PID = (0.0006 , 0.00002, 0.001)# values from tuuning qith qp node 0.00003, 0.00004, 0.0005
@@ -126,6 +124,14 @@ class CAV:
         self.right_top_circle_PID = (-0.55, -0.00045, -0.037)
         self.merging_circle_PID = (-0.0005, -0.00045, -0.003)
 
+        self.merge_path_dist = self.calc_distance(self.right_bottom_x, self.right_bottom_y, self.merging_pt_x, self.merging_pt_y)
+        self.main1_dist = self.calc_distance(self.right_center_x, self.right_center_y, self.merging_pt_x, self.merging_pt_y)
+        self.main2_dist = self.calc_distance(self.merging_pt_x, self.merging_pt_y, self.left_center_x, self.left_center_y)
+        self.return_first_dist = self.calc_distance(self.left_center_x, self.left_center_y, self.left_top_x, self.left_top_y)
+        self.return_second_dist = self.calc_distance(self.left_top_x, self.left_top_y, self.right_top_x, self.right_top_y)
+        self.return_third_dist = self.calc_distance(self.right_top_x, self.right_top_y, self.right_center_x, self.right_center_y)
+
+
         if isMain: #if tratehe limo runs along the main path
             #array to store all points, in order of traversal
             self.points = [(self.right_center_x, self.right_center_y), (self.merging_pt_x, self.merging_pt_y), (self.left_center_x, self.left_center_y),
@@ -133,25 +139,26 @@ class CAV:
             #array to store all lines, in order of traversal
             self.lines = [self.main_path, self.main_path, self.return_first, self.return_second, self.return_third]
             #the activation range of the corners, in order of traversal
-            self.ranges = [self.right_center_activation_range, self.left_center_activation_range,
+            self.ranges = [self.right_center_activation_range, self.left_center_activation_range, self.merging_pt_activation_range,
                            self.left_top_activation_range, self.right_top_activation_range]
             #array to store the circles for the corners, in order of traversal
-            self.circles = [self.right_center_circle, self.left_center_circle, self.left_top_circle, self.right_top_circle]
+            self.circles = [self.right_center_circle, self.merging_circle, self.left_center_circle, self.left_top_circle, self.right_top_circle]
             #array to store PID values of each line, in order of traversal, each element is a tuple (kp, ki, kd)
-            self.PIDs = [self.main_path_PID, self.return_first_PID, self.return_second_PID, self.return_third_PID]
+            self.PIDs = [self.main_path_PID, self.main_path_PID, self.return_first_PID, self.return_second_PID, self.return_third_PID]
             #array to store PID values of each circle, in order of traversal, each element is a tuple (kp, ki, kd)
-            self.curve_PIDs = [self.right_center_circle_PID, self.left_center_circle_PID, self.left_top_circle_PID, self.right_top_circle_PID]
-
+            self.curve_PIDs = [self.right_center_circle_PID, self.merging_circle_PID, self.left_center_circle_PID, self.left_top_circle_PID, self.right_top_circle_PID]
+            self.dist = [self.main1_dist, self.main2_dist, self.return_first_dist, self.return_second_dist, self.return_third_dist]
 
         else: #if the limo runs along the merging path
             self.points = [(self.right_bottom_x, self.right_bottom_y), (self.merging_pt_x, self.merging_pt_y), (self.left_center_x, self.left_center_y),
                         (self.left_top_x, self.left_top_y), (self.right_top_x, self.right_top_y)]
             self.lines = [self.merging_path, self.main_path, self.return_first, self.return_second, self.off_path]
             self.PIDs = [self.merge_path_PID, self.main_path_PID, self.return_first_PID, self.return_second_PID, self.return_third_PID]
-            self.ranges = [self.right_bottom_activation_range, self.merging_pt_activation_range, \
+            self.ranges = [self.right_bottom_activation_range, self.merging_pt_activation_range,
                            self.left_center_activation_range, self.left_top_activation_range, self.right_top_activation_range]
             self.circles = [self.right_bottom_circle, self.merging_circle, self.left_center_circle, self.left_top_circle, self. right_top_circle]
             self.curve_PIDs = [self.right_bottom_circle_PID, self.merging_circle_PID, self.left_center_circle_PID, self.left_top_circle_PID, self.right_top_circle_PID]
+            self.dist = [self.merge_path_dist, self.main2_dist, self.return_first_dist, self.return_second_dist, self.return_third_dist]
 
 
     def generate_line(self, x1, y1, x2, y2):
@@ -230,24 +237,10 @@ class CAV:
             lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
         #calculate steering and publisher to the listener node on the limo
         actual_velocity = self.velocity
-        print("self.velocity", self.velocity)
-
-        #event triggered: only calculate qp when close to merging point
-        # if abs(self.position_x  - self.current_end_pt[0])  < self.lane_width and \
-        #     abs(self.position_z - self.current_end_pt[1]) < self.lane_width and\
-        #     self.current_end_pt[0] == self.merging_pt_x and self.current_end_pt[1] == self.merging_pt_y:
-        #     print("calc qp")
-        #     desired_velocity = actual_velocity + self.qp_solution.u* 0.1  # Use control input from QP solution
-        #     #print("act vel", actual_velocity, "desired_velocity", desired_velocity)
-        # else:
-        #     if self.ID == "limo770":
-        #         desired_velocity = 0.4 # Use control input from QP solution
-        #     else:
-        #         desired_velocity = 0.4
 
         if self.ID == "limo770":
              desired_velocity = 0.4 + self.qp_solution.u* 0.1 # Use control input from QP solution
-             print("act vel", actual_velocity, "desired_velocity", desired_velocity,"qp_solutn", self.qp_solution.u)
+             #print("act vel", actual_velocity, "desired_velocity", desired_velocity,"qp_solutn", self.qp_solution.u)
         else:
             desired_velocity = 0.4
 
@@ -255,7 +248,7 @@ class CAV:
         control_input = -1
         #control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
 
-        desired_velocity = max(0, desired_velocity)
+        desired_velocity = min(0.9, max(0, desired_velocity))
         #print("lateral_error of", self.ID, lateral_error)
         #rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
 

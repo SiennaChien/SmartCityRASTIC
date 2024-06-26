@@ -41,6 +41,11 @@
     :reader v2
     :initarg :v2
     :type cl:float
+    :initform 0.0)
+   (vd
+    :reader vd
+    :initarg :vd
+    :type cl:float
     :initform 0.0))
 )
 
@@ -86,6 +91,11 @@
 (cl:defmethod v2-val ((m <limo_state>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader cav_project-msg:v2-val is deprecated.  Use cav_project-msg:v2 instead.")
   (v2 m))
+
+(cl:ensure-generic-function 'vd-val :lambda-list '(m))
+(cl:defmethod vd-val ((m <limo_state>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader cav_project-msg:vd-val is deprecated.  Use cav_project-msg:vd instead.")
+  (vd m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <limo_state>) ostream)
   "Serializes a message object of type '<limo_state>"
   (cl:let ((__ros_str_len (cl:length (cl:slot-value msg 'limoID))))
@@ -140,6 +150,15 @@
     (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
   (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'v2))))
+    (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 24) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 32) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 40) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 48) bits) ostream)
+    (cl:write-byte (cl:ldb (cl:byte 8 56) bits) ostream))
+  (cl:let ((bits (roslisp-utils:encode-double-float-bits (cl:slot-value msg 'vd))))
     (cl:write-byte (cl:ldb (cl:byte 8 0) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 8) bits) ostream)
     (cl:write-byte (cl:ldb (cl:byte 8 16) bits) ostream)
@@ -219,6 +238,16 @@
       (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
       (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
     (cl:setf (cl:slot-value msg 'v2) (roslisp-utils:decode-double-float-bits bits)))
+    (cl:let ((bits 0))
+      (cl:setf (cl:ldb (cl:byte 8 0) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 8) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 16) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 24) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 32) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 40) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 48) bits) (cl:read-byte istream))
+      (cl:setf (cl:ldb (cl:byte 8 56) bits) (cl:read-byte istream))
+    (cl:setf (cl:slot-value msg 'vd) (roslisp-utils:decode-double-float-bits bits)))
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<limo_state>)))
@@ -229,19 +258,20 @@
   "cav_project/limo_state")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<limo_state>)))
   "Returns md5sum for a message object of type '<limo_state>"
-  "097546323ecb5d049eb661f134c02c13")
+  "a1fba4736fa7b1723499e2717d3f0429")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'limo_state)))
   "Returns md5sum for a message object of type 'limo_state"
-  "097546323ecb5d049eb661f134c02c13")
+  "a1fba4736fa7b1723499e2717d3f0429")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<limo_state>)))
   "Returns full string definition for message of type '<limo_state>"
-  (cl:format cl:nil "string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%~%~%"))
+  (cl:format cl:nil "string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%float64 vd~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'limo_state)))
   "Returns full string definition for message of type 'limo_state"
-  (cl:format cl:nil "string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%~%~%"))
+  (cl:format cl:nil "string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%float64 vd~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <limo_state>))
   (cl:+ 0
      4 (cl:length (cl:slot-value msg 'limoID))
+     8
      8
      8
      8
@@ -259,4 +289,5 @@
     (cl:cons ':v1 (v1 msg))
     (cl:cons ':d2 (d2 msg))
     (cl:cons ':v2 (v2 msg))
+    (cl:cons ':vd (vd msg))
 ))

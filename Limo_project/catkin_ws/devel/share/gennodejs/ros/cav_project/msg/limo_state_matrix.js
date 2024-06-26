@@ -71,7 +71,7 @@ class limo_state_matrix {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '8726c45313017f9857b70bc15ddc333f';
+    return '740144a5e7a0faac2a90d0ea5a472a9f';
   }
 
   static messageDefinition() {
@@ -88,6 +88,7 @@ class limo_state_matrix {
     float64 v1
     float64 d2
     float64 v2
+    float64 vd
     
     `;
   }

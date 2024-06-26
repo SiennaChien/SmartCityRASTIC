@@ -16,8 +16,8 @@ class QPSolverCAV1:
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1 # Maximum control input (acceleration)
         self.phiRearEnd = 1.8 # Reaction time for rear-end safety constraint
-        self.phiLateral = 0.3 # Reaction time for lateral safety constraint
-        self.deltaSafetyDistance = 0.4# Minimum safety distance (meters)
+        self.phiLateral = 0.95 # Reaction time for lateral safety constraint
+        self.deltaSafetyDistance = 0.15# Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
 
@@ -48,9 +48,9 @@ class QPSolverCAV1:
 
         for limo in data.limos:
             if limo.limoID == self.cav1_id:
-                self.state = [limo.d0/1000, 0.5, limo.d2/1000]
+                self.state = [limo.d0/1000, limo.vel, limo.d2/1000, limo.d1/1000]
             elif limo.limoID == self.cav2_id:
-                cav2_data = [limo.limoID, limo.d0/1000, limo.v2/1000, limo.d2/1000]
+                cav2_data = [limo.limoID, limo.d0/1000, limo.v2, limo.d2/1000, limo.d1/1000]
             #elif limo.limoID == self.cav3_id:
                 #cav3_data = [limo.limoID, limo.d0, limo.v1, limo.d1]
 
@@ -68,7 +68,7 @@ class QPSolverCAV1:
         t = 0.1
 
         # Reference control input
-        u_ref = 1#c[0] * t + c[1]
+        u_ref = 2#c[0] * t + c[1]
 
         # Physical limitations on velocity
         b_vmax = self.v_max - x0[1]
@@ -87,7 +87,8 @@ class QPSolverCAV1:
 
         # Rear-end Safety Constraints
         rear_end_h = None
-        if matrix_const[1][0] != -1:
+        if self.state[3] != -0.001:
+            print("rear end")
             d1 = self.matrix_const[1][3]
             h = d1 - self.phiRearEnd * x0[1] - self.deltaSafetyDistance
             vip = matrix_const[1][2]  # Velocity of the preceding vehicle CAV3
@@ -103,10 +104,10 @@ class QPSolverCAV1:
 
         # Lateral Safety Constraint
         lateral_h = None
-        if matrix_const[2][0] != -1:
+        if self.state[2] != -0.001:
             L = 4  # Length of the merging lane
             d2 = state[2]  # Distance d2 from limo_state message
-            print("qp 1 d2", d2)
+            print("lateral")
 
             v0 = matrix_const[2][2]  # Velocity of the conflicting vehicle (CAV2)
             bigPhi = self.phiLateral * x0[0] / L
@@ -140,7 +141,7 @@ class QPSolverCAV1:
             u = self.u_min
 
         # Evaluate and print the actual constraint values
-        delta = 5
+        delta = 10
         #print(f"Evaluated CLF constraint: {phi1 * u - phi0 - delta}")
         #if rear_end_h is not None:
             #a = 0
@@ -153,7 +154,7 @@ class QPSolverCAV1:
 
     def recalc_qp(self):
         if self.state is not None and self.matrix_const is not None:
-            vd = 1  # Reference velocity is the current velocity
+            vd = 0.5  # Reference velocity is the current velocity
             u = self.OCBF_SecondOrderDynamics(self.matrix_const, self.state, vd)
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u

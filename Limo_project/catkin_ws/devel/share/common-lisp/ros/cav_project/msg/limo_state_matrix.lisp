@@ -58,16 +58,16 @@
   "cav_project/limo_state_matrix")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<limo_state_matrix>)))
   "Returns md5sum for a message object of type '<limo_state_matrix>"
-  "8726c45313017f9857b70bc15ddc333f")
+  "740144a5e7a0faac2a90d0ea5a472a9f")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'limo_state_matrix)))
   "Returns md5sum for a message object of type 'limo_state_matrix"
-  "8726c45313017f9857b70bc15ddc333f")
+  "740144a5e7a0faac2a90d0ea5a472a9f")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<limo_state_matrix>)))
   "Returns full string definition for message of type '<limo_state_matrix>"
-  (cl:format cl:nil "limo_state[] limos~%~%================================================================================~%MSG: cav_project/limo_state~%string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%~%~%"))
+  (cl:format cl:nil "limo_state[] limos~%~%================================================================================~%MSG: cav_project/limo_state~%string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%float64 vd~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'limo_state_matrix)))
   "Returns full string definition for message of type 'limo_state_matrix"
-  (cl:format cl:nil "limo_state[] limos~%~%================================================================================~%MSG: cav_project/limo_state~%string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%~%~%"))
+  (cl:format cl:nil "limo_state[] limos~%~%================================================================================~%MSG: cav_project/limo_state~%string limoID~%float64 vel~%float64 d0~%float64 d1~%float64 v1~%float64 d2~%float64 v2~%float64 vd~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <limo_state_matrix>))
   (cl:+ 0
      4 (cl:reduce #'cl:+ (cl:slot-value msg 'limos) :key #'(cl:lambda (ele) (cl:declare (cl:ignorable ele)) (cl:+ (roslisp-msg-protocol:serialization-length ele))))

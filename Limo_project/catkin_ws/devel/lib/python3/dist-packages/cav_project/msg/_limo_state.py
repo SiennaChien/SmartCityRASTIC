@@ -8,7 +8,7 @@ import struct
 
 
 class limo_state(genpy.Message):
-  _md5sum = "097546323ecb5d049eb661f134c02c13"
+  _md5sum = "a1fba4736fa7b1723499e2717d3f0429"
   _type = "cav_project/limo_state"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """string limoID
@@ -18,9 +18,10 @@ float64 d1
 float64 v1
 float64 d2
 float64 v2
+float64 vd
 """
-  __slots__ = ['limoID','vel','d0','d1','v1','d2','v2']
-  _slot_types = ['string','float64','float64','float64','float64','float64','float64']
+  __slots__ = ['limoID','vel','d0','d1','v1','d2','v2','vd']
+  _slot_types = ['string','float64','float64','float64','float64','float64','float64','float64']
 
   def __init__(self, *args, **kwds):
     """
@@ -30,7 +31,7 @@ float64 v2
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       limoID,vel,d0,d1,v1,d2,v2
+       limoID,vel,d0,d1,v1,d2,v2,vd
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -53,6 +54,8 @@ float64 v2
         self.d2 = 0.
       if self.v2 is None:
         self.v2 = 0.
+      if self.vd is None:
+        self.vd = 0.
     else:
       self.limoID = ''
       self.vel = 0.
@@ -61,6 +64,7 @@ float64 v2
       self.v1 = 0.
       self.d2 = 0.
       self.v2 = 0.
+      self.vd = 0.
 
   def _get_types(self):
     """
@@ -81,7 +85,7 @@ float64 v2
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self
-      buff.write(_get_struct_6d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2))
+      buff.write(_get_struct_7d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -105,8 +109,8 @@ float64 v2
         self.limoID = str[start:end]
       _x = self
       start = end
-      end += 48
-      (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2,) = _get_struct_6d().unpack(str[start:end])
+      end += 56
+      (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd,) = _get_struct_7d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -126,7 +130,7 @@ float64 v2
         length = len(_x)
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self
-      buff.write(_get_struct_6d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2))
+      buff.write(_get_struct_7d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -151,8 +155,8 @@ float64 v2
         self.limoID = str[start:end]
       _x = self
       start = end
-      end += 48
-      (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2,) = _get_struct_6d().unpack(str[start:end])
+      end += 56
+      (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd,) = _get_struct_7d().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -161,9 +165,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_6d = None
-def _get_struct_6d():
-    global _struct_6d
-    if _struct_6d is None:
-        _struct_6d = struct.Struct("<6d")
-    return _struct_6d
+_struct_7d = None
+def _get_struct_7d():
+    global _struct_7d
+    if _struct_7d is None:
+        _struct_7d = struct.Struct("<7d")
+    return _struct_7d

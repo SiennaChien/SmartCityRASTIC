@@ -61,7 +61,7 @@
    self)
   )
 
-(setf (get cav_project::limo_state_matrix :md5sum-) "8726c45313017f9857b70bc15ddc333f")
+(setf (get cav_project::limo_state_matrix :md5sum-) "740144a5e7a0faac2a90d0ea5a472a9f")
 (setf (get cav_project::limo_state_matrix :datatype-) "cav_project/limo_state_matrix")
 (setf (get cav_project::limo_state_matrix :definition-)
       "limo_state[] limos
@@ -75,11 +75,12 @@ float64 d1
 float64 v1
 float64 d2
 float64 v2
+float64 vd
 
 ")
 
 
 
-(provide :cav_project/limo_state_matrix "8726c45313017f9857b70bc15ddc333f")
+(provide :cav_project/limo_state_matrix "740144a5e7a0faac2a90d0ea5a472a9f")
 
 

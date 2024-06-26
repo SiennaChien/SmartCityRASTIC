@@ -9,7 +9,7 @@ import struct
 import cav_project.msg
 
 class limo_state_matrix(genpy.Message):
-  _md5sum = "8726c45313017f9857b70bc15ddc333f"
+  _md5sum = "740144a5e7a0faac2a90d0ea5a472a9f"
   _type = "cav_project/limo_state_matrix"
   _has_header = False  # flag to mark the presence of a Header object
   _full_text = """limo_state[] limos
@@ -23,6 +23,7 @@ float64 d1
 float64 v1
 float64 d2
 float64 v2
+float64 vd
 """
   __slots__ = ['limos']
   _slot_types = ['cav_project/limo_state[]']
@@ -71,7 +72,7 @@ float64 v2
           length = len(_x)
         buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
         _x = val1
-        buff.write(_get_struct_6d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2))
+        buff.write(_get_struct_7d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -103,8 +104,8 @@ float64 v2
           val1.limoID = str[start:end]
         _x = val1
         start = end
-        end += 48
-        (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2,) = _get_struct_6d().unpack(str[start:end])
+        end += 56
+        (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd,) = _get_struct_7d().unpack(str[start:end])
         self.limos.append(val1)
       return self
     except struct.error as e:
@@ -128,7 +129,7 @@ float64 v2
           length = len(_x)
         buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
         _x = val1
-        buff.write(_get_struct_6d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2))
+        buff.write(_get_struct_7d().pack(_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -161,8 +162,8 @@ float64 v2
           val1.limoID = str[start:end]
         _x = val1
         start = end
-        end += 48
-        (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2,) = _get_struct_6d().unpack(str[start:end])
+        end += 56
+        (_x.vel, _x.d0, _x.d1, _x.v1, _x.d2, _x.v2, _x.vd,) = _get_struct_7d().unpack(str[start:end])
         self.limos.append(val1)
       return self
     except struct.error as e:
@@ -172,9 +173,9 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_6d = None
-def _get_struct_6d():
-    global _struct_6d
-    if _struct_6d is None:
-        _struct_6d = struct.Struct("<6d")
-    return _struct_6d
+_struct_7d = None
+def _get_struct_7d():
+    global _struct_7d
+    if _struct_7d is None:
+        _struct_7d = struct.Struct("<7d")
+    return _struct_7d

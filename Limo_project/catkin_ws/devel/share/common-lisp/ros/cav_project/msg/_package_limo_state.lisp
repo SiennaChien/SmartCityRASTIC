@@ -13,4 +13,6 @@
           D2
           V2-VAL
           V2
+          VD-VAL
+          VD
 ))

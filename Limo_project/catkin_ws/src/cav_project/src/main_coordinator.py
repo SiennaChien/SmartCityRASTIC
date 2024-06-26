@@ -43,15 +43,15 @@ class MainCoordinator:
             for i in range(len(order_list)):
                 cav = order_list[i]
                 current = cav.current
+                #for simplicity, should modify to just pass the object, not a whole dictionary
                 search_info_dic = {
                     "cav_object": cav,
-                    "cav_name": cav.ID,
                     "current_line": cav.lines[current],
                     "current_start_pt": cav.points[current],
                     "current_end_pt": cav.points[(current+1) % len(cav.points)],
                     "current_pos": [cav.position_x, cav.position_z],
+                    "critical_range": cav.within_critical_range
                 }
-                print("cav", cav.ID, "current index", current, "next index", cav.next)
                 search_info.append(search_info_dic)
             limo_state_mat = limo_state_matrix()
             for i in range(len(order_list)):
@@ -63,14 +63,6 @@ class MainCoordinator:
                 cav2.run()
                 self.rate.sleep()
 
-
-
-# if len(limo_state_matrix_msg.limos) > 0:
-#     # Access the d2 value of the first limo in the limos array
-#     d2_value = limo_state_matrix_msg.limos[0].d2
-#     print("d2 value of the first limo:", d2_value)
-# else:
-#     print("No limos available in limo_state_matrix_msg")
 
 if __name__ == '__main__':
     coordinator = MainCoordinator()

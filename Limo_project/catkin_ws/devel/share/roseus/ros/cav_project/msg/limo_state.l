@@ -14,7 +14,7 @@
 
 (defclass cav_project::limo_state
   :super ros::object
-  :slots (_limoID _vel _d0 _d1 _v1 _d2 _v2 ))
+  :slots (_limoID _vel _d0 _d1 _v1 _d2 _v2 _vd ))
 
 (defmethod cav_project::limo_state
   (:init
@@ -26,6 +26,7 @@
     ((:v1 __v1) 0.0)
     ((:d2 __d2) 0.0)
     ((:v2 __v2) 0.0)
+    ((:vd __vd) 0.0)
     )
    (send-super :init)
    (setq _limoID (string __limoID))
@@ -35,6 +36,7 @@
    (setq _v1 (float __v1))
    (setq _d2 (float __d2))
    (setq _v2 (float __v2))
+   (setq _vd (float __vd))
    self)
   (:limoID
    (&optional __limoID)
@@ -57,6 +59,9 @@
   (:v2
    (&optional __v2)
    (if __v2 (setq _v2 __v2)) _v2)
+  (:vd
+   (&optional __vd)
+   (if __vd (setq _vd __vd)) _vd)
   (:serialization-length
    ()
    (+
@@ -73,6 +78,8 @@
     ;; float64 _d2
     8
     ;; float64 _v2
+    8
+    ;; float64 _vd
     8
     ))
   (:serialize
@@ -93,6 +100,8 @@
        (sys::poke _d2 (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;; float64 _v2
        (sys::poke _v2 (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
+     ;; float64 _vd
+       (sys::poke _vd (send s :buffer) (send s :count) :double) (incf (stream-count s) 8)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -111,11 +120,13 @@
      (setq _d2 (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;; float64 _v2
      (setq _v2 (sys::peek buf ptr- :double)) (incf ptr- 8)
+   ;; float64 _vd
+     (setq _vd (sys::peek buf ptr- :double)) (incf ptr- 8)
    ;;
    self)
   )
 
-(setf (get cav_project::limo_state :md5sum-) "097546323ecb5d049eb661f134c02c13")
+(setf (get cav_project::limo_state :md5sum-) "a1fba4736fa7b1723499e2717d3f0429")
 (setf (get cav_project::limo_state :datatype-) "cav_project/limo_state")
 (setf (get cav_project::limo_state :definition-)
       "string limoID
@@ -125,11 +136,12 @@ float64 d1
 float64 v1
 float64 d2
 float64 v2
+float64 vd
 
 ")
 
 
 
-(provide :cav_project/limo_state "097546323ecb5d049eb661f134c02c13")
+(provide :cav_project/limo_state "a1fba4736fa7b1723499e2717d3f0429")
 
 
