@@ -7,11 +7,11 @@ from cav_project.msg import limo_state, limo_state_matrix, QP_solution
 import matplotlib.pyplot as plt
 
 
-class QPSolverCAV1:
-    def __init__(self, cav1_id, cav2_id):
+class QPSolverCAV3:
+    def __init__(self, cav1_id, cav2_id, cav3_id):
         self.cav1_id = cav1_id  # CAV1 on merging road
         self.cav2_id = cav2_id  # CAV2 on main road
-        #self.cav3_id = cav3_id  # CAV3 preceding CAV1 on merging road
+        self.cav3_id = cav3_id  # CAV3 behind CAV2 on main road
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1 # Maximum control input (acceleration)
@@ -21,13 +21,12 @@ class QPSolverCAV1:
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
 
-        rospy.init_node("qp_solver_" + self.cav1_id)
-        self.qp_solution_pub = rospy.Publisher('/qp_solution_' + self.cav1_id, QP_solution, queue_size=10)
-        self.mocap_sub = rospy.Subscriber('/vrpn_client_node/' + self.cav1_id + '/pose', PoseStamped, self.mocap_callback)
+        rospy.init_node("qp_solver_" + self.cav3_id)
+        self.qp_solution_pub = rospy.Publisher('/qp_solution_' + self.cav3_id, QP_solution, queue_size=10)
+        self.mocap_sub = rospy.Subscriber('/vrpn_client_node/' + self.cav3_id + '/pose', PoseStamped, self.mocap_callback)
         rospy.Subscriber('/limo_state_matrix', limo_state_matrix, self.limo_state_callback)
 
         self.state = None
-        self.matrix_const = None
         self.lateral_h_values = []  # Store lateral h values
         self.time_values = []  # Store time values
         self.start_time = rospy.Time.now()
@@ -43,26 +42,16 @@ class QPSolverCAV1:
         self.Receivedata = 1
 
     def limo_state_callback(self, data):
-        cav2_data = [-1, -1, -1, -1]
-        #cav3_data = [-1, -1, -1, -1]
-
         for limo in data.limos:
-            if limo.limoID == self.cav1_id:
-                self.state = [limo.d0/1000, limo.vel, limo.d2/1000, limo.d1/1000]
-            elif limo.limoID == self.cav2_id:
-                cav2_data = [limo.limoID, limo.d0/1000, limo.v2, limo.d2/1000, limo.d1/1000]
-            #elif limo.limoID == self.cav3_id:
-                #cav3_data = [limo.limoID, limo.d0, limo.v1, limo.d1]
+            if limo.limoID == self.cav3_id:
+                self.state = [limo.limoID, limo.vel,limo.d0/1000, limo.d1/1000, limo.v1, limo.d2/1000, limo.v2]
+                self.x0 = [limo.d0/1000, limo.vel, limo.d2/1000]
 
-        self.matrix_const = [
-            [-1, -1, -1, -1],  # Placeholder for no preceding vehicle
-            [-1, -1, -1, -1],  # CAV3 information
-            cav2_data   # CAV2 information
-        ]
-    def OCBF_SecondOrderDynamics(self, matrix_const, state, vd):
+    def OCBF_SecondOrderDynamics(self, state, vd):
         ocpar = [-0.593787660013256, 1.41421356237309, 0, 0, 2.38168230431317, 1.68410370801184];
         c = np.array(ocpar)
-        x0 = np.array(state)  # x0[0] is d0, x0[1] is vel, x0[2] is d2
+        x0 = self.x0  # x0[0] is d0, x0[1] is vel, x0[2] is d2
+        print(x0)
         eps = 10
         psc = 0.1
         t = 0.1
@@ -91,7 +80,7 @@ class QPSolverCAV1:
             print("rear end")
             d1 = self.state[3]
             h = d1 - self.phiRearEnd * x0[1] - self.deltaSafetyDistance
-            vip = matrix_const[1][2]  # Velocity of the preceding vehicle CAV3
+            vip = self.state[4] # Velocity of the preceding vehicle CAV2
             LgB = self.phiRearEnd
             LfB = vip - x0[1]
             if LgB != 0:
@@ -108,7 +97,7 @@ class QPSolverCAV1:
             L = 4  # Length of the merging lane
             d2 = state[2]  # Distance d2 from limo_state message
             print("lateral")
-            v0 = matrix_const[2][2]  # Velocity of the conflicting vehicle (CAV2)
+            v0 = self.state[6]  # Velocity of the conflicting vehicle (CAV2)
             bigPhi = self.phiLateral * x0[0] / L
             h = d2 - bigPhi * x0[1] - self.deltaSafetyDistance
             LgB = bigPhi
@@ -152,12 +141,12 @@ class QPSolverCAV1:
         return u
 
     def recalc_qp(self):
-        if self.state is not None and self.matrix_const is not None:
+        if self.state is not None:
             vd = 0.5  # Reference velocity is the current velocity
-            u = self.OCBF_SecondOrderDynamics(self.matrix_const, self.state, vd)
+            u = self.OCBF_SecondOrderDynamics(self.state, vd)
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u
-            print("qp 1 u", u)
+            print("qp 3 u", u)
             self.qp_solution_pub.publish(qp_solution_msg)
 
     def plot_lateral_h(self):
@@ -175,5 +164,5 @@ class QPSolverCAV1:
         self.plot_lateral_h()
 
 if __name__ == '__main__':
-    solver = QPSolverCAV1("limo770", "limo155")
+    solver = QPSolverCAV3("limo770", "limo155", "limo795")
     solver.run()
