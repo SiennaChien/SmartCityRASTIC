@@ -21,46 +21,21 @@ class MainCoordinator:
     def run(self):
         cav1 = CAV("limo770", False)
         cav2 = CAV("limo155", True)
-        #cav3 = CAV("limo795", True)
+        cav3 = CAV("limo795", True)
 
-        order_list = [cav2, cav1]
-        search_info = []
+        order_list = [cav2, cav1, cav3]
 
-        for i in range(len(order_list)):
-            cav = order_list[i]
-            current = cav.current
-            search_info_dic = {
-                "cav_object": cav,
-                "cav_name": cav.ID,
-                "current_line": cav.lines[current],
-                "current_start_pt": cav.points[current],
-                "current_end_pt": cav.points[(current+1) % len(cav.points)],
-                "current_pos": [cav.position_x, cav.position_z],
-            }
-            search_info.append(search_info_dic)
         while not rospy.is_shutdown():
-            search_info = []
-            for i in range(len(order_list)):
-                cav = order_list[i]
-                current = cav.current
-                #for simplicity, should modify to just pass the object, not a whole dictionary
-                search_info_dic = {
-                    "cav_object": cav,
-                    "current_line": cav.lines[current],
-                    "current_start_pt": cav.points[current],
-                    "current_end_pt": cav.points[(current+1) % len(cav.points)],
-                    "current_pos": [cav.position_x, cav.position_z],
-                    "critical_range": cav.within_critical_range
-                }
-                search_info.append(search_info_dic)
             limo_state_mat = limo_state_matrix()
             for i in range(len(order_list)):
-                limo_state_msg = calc_qp_info(search_info, i)
+                limo_state_msg = calc_qp_info(order_list, i)
                 limo_state_mat.limos.append(limo_state_msg)
             self.limo_state_matrix_pub.publish(limo_state_mat)
+
             if True: #self.qp_solution_cav1 and self.qp_solution_cav2 and self.cav_info_cav1 and self.cav_info_cav2:
                 cav1.run()
                 cav2.run()
+                cav3.run()
                 self.rate.sleep()
 
 

@@ -56,6 +56,8 @@ class CAV:
         self.line_changed = True
         self.current = 0
         self.next = 1
+        self.current_line = self.lines[self.current]
+        self.current_end_pt = self.points[self.next]
 
     def mocap_callback(self, msg):
         self.position_z = msg.pose.position.z * 1000
@@ -81,7 +83,7 @@ class CAV:
         self.left_top_y = -1980
         self.left_center_x = 1922
         self.left_center_y = -1977
-        self.merging_pt_x = 1900
+        self.merging_pt_x = 1825
         self.merging_pt_y = -652
         self.lane_width = 450
 
@@ -97,30 +99,31 @@ class CAV:
         self.right_top_circle = (self.right_top_x - self.lane_width, self.right_top_y - self.lane_width, self.lane_width/1.5)
         self.right_center_circle = (self.right_center_x + self.lane_width, self.right_center_y - self.lane_width, self.lane_width/1.5)
         self.right_bottom_circle = (self.right_bottom_x + self.lane_width, self.right_bottom_y - self.lane_width, self.lane_width/2)
-        self.left_top_circle = (self.left_top_x - self.lane_width, self.left_top_y + self.lane_width, self.lane_width/1.5)
-        self.left_center_circle = (self.left_center_x + self.lane_width, self.left_center_y + self.lane_width, self.lane_width/1.2)
+        self.left_top_circle = (self.left_top_x - self.lane_width, self.left_top_y + self.lane_width, self.lane_width/1.3)
+        self.left_center_circle = (self.left_center_x + self.lane_width, self.left_center_y + self.lane_width, self.lane_width/1.5)
         self.merging_circle = (self.merging_pt_x + self.lane_width, self.merging_pt_y - self.lane_width, self.lane_width) #in practice this is not use
 
         #the ranges near each corner that activates the circle path for the limo to follow
-        self.right_top_activation_range = (self.lane_width *1, self.lane_width * 1)
-        self.right_center_activation_range = (self.lane_width * 1, self.lane_width * 1)
+        self.right_top_activation_range = (self.lane_width * 0.8, self.lane_width * 1)
+        self.right_center_activation_range = (self.lane_width * 1, self.lane_width * 0.8)
         self.right_bottom_activation_range = (self.lane_width * 1, self.lane_width*1.2)
-        self.left_top_activation_range = (self.lane_width * 1.1, self.lane_width / 1.3)
-        self.left_center_activation_range = (self.lane_width / 1.5, self.lane_width * 1.2)
-        self.merging_pt_activation_range = (self.lane_width, self.lane_width / 1.6)
+        self.left_top_activation_range = (self.lane_width * 1, self.lane_width / 1.7)
+        self.left_center_activation_range = (self.lane_width / 1, self.lane_width * 1)
+        self.merging_pt_activation_range = (self.lane_width * 0.7, self.lane_width * 0.5)
 
         #PID values of each line, each element is a tuple (kp, ki, kd)
-        self.merge_path_PID = (0.00018, 0.00018, 0.003) #0.0005, -0.00005, -0.001)
+        self.merge_path_PID = (0.0005, 0.00003, 0.003) #0.0005, -0.00005, -0.001)
         self.main_path_PID = (0.0002, 0.00005, 0.001)
-        self.return_first_PID = (0.0005, 0.00002, 0.001)
-        self.return_second_PID = (0.0005, 0.00002, 0.001)
-        self.return_third_PID = (0.0006 , 0.00002, 0.001)# values from tuuning qith qp node 0.00003, 0.00004, 0.0005
+        self.main_path2_PID = (0.0007, 0.00008, 0.001)
+        self.return_first_PID = (0.002, 0.00005, 0.003)
+        self.return_second_PID = (0.0008, 0.00008, 0.003)
+        self.return_third_PID = (0.0008, 0.00008, 0.005)# values from tuuning qith qp node 0.00003, 0.00004, 0.0005
 
         #PID values of each circle, each element is a tuple (kp, ki, kd)
         self.right_bottom_circle_PID = (-0.050, -0.00045, -0.037)
         self.right_center_circle_PID = (-0.0030, -0.000045, -0.0017)
         self.left_center_circle_PID = (-0.56, -0.00045, -0.037)
-        self.left_top_circle_PID = (-0.60, -0.045, -0.050)
+        self.left_top_circle_PID = (-0.7, -0.00045, -0.050)
         self.right_top_circle_PID = (-0.55, -0.00045, -0.037)
         self.merging_circle_PID = (-0.0005, -0.00045, -0.003)
 
@@ -139,7 +142,7 @@ class CAV:
             #array to store all lines, in order of traversal
             self.lines = [self.main_path, self.main_path, self.return_first, self.return_second, self.return_third]
             #the activation range of the corners, in order of traversal
-            self.ranges = [self.right_center_activation_range, self.left_center_activation_range, self.merging_pt_activation_range,
+            self.ranges = [self.right_center_activation_range, self.merging_pt_activation_range, self.left_center_activation_range,
                            self.left_top_activation_range, self.right_top_activation_range]
             #array to store the circles for the corners, in order of traversal
             self.circles = [self.right_center_circle, self.merging_circle, self.left_center_circle, self.left_top_circle, self.right_top_circle]
@@ -153,7 +156,7 @@ class CAV:
             self.points = [(self.right_bottom_x, self.right_bottom_y), (self.merging_pt_x, self.merging_pt_y), (self.left_center_x, self.left_center_y),
                         (self.left_top_x, self.left_top_y), (self.right_top_x, self.right_top_y)]
             self.lines = [self.merging_path, self.main_path, self.return_first, self.return_second, self.off_path]
-            self.PIDs = [self.merge_path_PID, self.main_path_PID, self.return_first_PID, self.return_second_PID, self.return_third_PID]
+            self.PIDs = [self.merge_path_PID, self.main_path2_PID, self.return_first_PID, self.return_second_PID, self.return_third_PID]
             self.ranges = [self.right_bottom_activation_range, self.merging_pt_activation_range,
                            self.left_center_activation_range, self.left_top_activation_range, self.right_top_activation_range]
             self.circles = [self.right_bottom_circle, self.merging_circle, self.left_center_circle, self.left_top_circle, self. right_top_circle]
@@ -238,11 +241,11 @@ class CAV:
         #calculate steering and publisher to the listener node on the limo
         actual_velocity = self.velocity
 
-        if self.ID == "limo770":
-             desired_velocity = 0.4 + self.qp_solution.u* 0.1 # Use control input from QP solution
-             #print("act vel", actual_velocity, "desired_velocity", desired_velocity,"qp_solutn", self.qp_solution.u)
+        if self.ID == "limo770" or self.ID == "limo795":
+            desired_velocity = actual_velocity + self.qp_solution.u* 0.1 # Use control input from QP solution
+            #print("act vel", actual_velocity, "desired_velocity", desired_velocity,"qp_solutn", self.qp_solution.u)
         else:
-            desired_velocity = 0.4
+            desired_velocity = 0.5
 
         steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
         control_input = -1

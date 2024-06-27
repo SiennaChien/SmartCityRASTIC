@@ -15,8 +15,8 @@ class QPSolverCAV3:
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1 # Maximum control input (acceleration)
-        self.phiRearEnd = 1.8# Reaction time for rear-end safety constraint
-        self.phiLateral = 3.3# Reaction time for lateral safety constraint
+        self.phiRearEnd = 0.2# Reaction time for rear-end safety constraint
+        self.phiLateral = 3.3 # Reaction time for lateral safety constraint
         self.deltaSafetyDistance = 0.4# Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
@@ -51,13 +51,12 @@ class QPSolverCAV3:
         ocpar = [-0.593787660013256, 1.41421356237309, 0, 0, 2.38168230431317, 1.68410370801184];
         c = np.array(ocpar)
         x0 = self.x0  # x0[0] is d0, x0[1] is vel, x0[2] is d2
-        print(x0)
         eps = 10
         psc = 0.1
         t = 0.1
 
         # Reference control input
-        u_ref = 1#c[0] * t + c[1]
+        u_ref = 1 #c[0] * t + c[1]
 
         # Physical limitations on velocity
         b_vmax = self.v_max - x0[1]
@@ -77,7 +76,7 @@ class QPSolverCAV3:
         # Rear-end Safety Constraints
         rear_end_h = None
         if self.state[3] != -0.001:
-            print("rear end")
+            #print("qp three, rear end")
             d1 = self.state[3]
             h = d1 - self.phiRearEnd * x0[1] - self.deltaSafetyDistance
             vip = self.state[4] # Velocity of the preceding vehicle CAV2
@@ -93,10 +92,10 @@ class QPSolverCAV3:
 
         # Lateral Safety Constraint
         lateral_h = None
-        if self.state[2] != -0.001:
+        if self.state[5] != -0.001:
             L = 4  # Length of the merging lane
-            d2 = state[2]  # Distance d2 from limo_state message
-            print("lateral")
+            d2 = state[5]  # Distance d2 from limo_state message
+            #print("qp three, lateral")
             v0 = self.state[6]  # Velocity of the conflicting vehicle (CAV2)
             bigPhi = self.phiLateral * x0[0] / L
             h = d2 - bigPhi * x0[1] - self.deltaSafetyDistance
@@ -132,21 +131,19 @@ class QPSolverCAV3:
         delta = 10
         #print(f"Evaluated CLF constraint: {phi1 * u - phi0 - delta}")
         #if rear_end_h is not None:
-            #a = 0
             #print(f"Evaluated Rear-end constraint: {-LgB * u + LfB + rear_end_h}")
         #if lateral_h is not None:
-            #a = 0
             #print(f"Evaluated Lateral constraint: {-LgB * u + LfB + lateral_h}")
 
         return u
 
     def recalc_qp(self):
         if self.state is not None:
-            vd = 0.5  # Reference velocity is the current velocity
+            vd = 0.3  # Reference velocity is the current velocity
             u = self.OCBF_SecondOrderDynamics(self.state, vd)
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u
-            print("qp 3 u", u)
+            #print("qp 3 u", u)
             self.qp_solution_pub.publish(qp_solution_msg)
 
     def plot_lateral_h(self):

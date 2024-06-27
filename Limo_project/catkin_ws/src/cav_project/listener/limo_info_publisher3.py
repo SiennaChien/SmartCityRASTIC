@@ -41,7 +41,7 @@ class LimoInfoPublisher:
 
 
 if __name__ == '__main__':
-    publisher = LimoInfoPublisher("limo770")
+    publisher = LimoInfoPublisher("limo795")
     limo= limo.LIMO()
     limo.EnableCommand()
     limo.SetMotionCommand(linear_vel=0, steering_angle=0)
