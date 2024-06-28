@@ -29,15 +29,16 @@ class QPSolverCAV1:
         for limo in data.limos:
             if limo.limoID == self.cav1_id:
                 self.x0 = [limo.d0/1000, limo.vel, limo.d2/1000]
-                self.state = [limo.limoID, limo.vel, limo.d0/1000, limo.d1/1000, limo.v1, limo.d2/1000, limo.v2]
+                self.state = [limo.limoID, limo.vel, limo.d0/1000, limo.d1/1000, limo.v1, limo.d2/1000, limo.v2, limo.vd]
 
-    def OCBF_SecondOrderDynamics(self, state, vd):
-        ocpar = [-0.593787660013256, 1.41421356237309, 0, 0, 2.38168230431317, 1.68410370801184]
-        c = np.array(ocpar)
+    def OCBF_SecondOrderDynamics(self):
+        #ocpar = [-0.593787660013256, 1.41421356237309, 0, 0, 2.38168230431317, 1.68410370801184]
+        #c = np.array(ocpar)
         x0 = self.x0  # x0[0] is d0, x0[1] is vel, x0[2] is d2
         eps = 10
         psc = 0.1
-        t = 0.1
+        #t = 0.1
+        vd = self.state[7]
 
         # Reference control input
         u_ref = 0.5 #c[0] * t + c[1]
@@ -54,11 +55,10 @@ class QPSolverCAV1:
         A = np.array([[1, 0], [-1, 0], [phi1, -1], [1, 0], [-1, 0]])
         b = np.array([self.u_max, -self.u_min, phi0, b_vmax, b_vmin])
 
-        # ##print CLF values
+        #print CLF values
         #print(f"CLF phi0: {phi0}, phi1: {phi1}")
 
         # Rear-end Safety Constraints
-        rear_end_h = None
         if self.state[3] != -0.001:
             print("qp 1, rear end")
             d1 = self.state[3]
@@ -70,12 +70,10 @@ class QPSolverCAV1:
                 A = np.append(A, [[LgB, 0]], axis=0)
                 b = np.append(b, [LfB + h])
                 rear_end_h = h
-
-                # ##print rear-end CBF values
+                #print rear-end CBF values
                 #print(f"Rear-end h: {h}")
 
         # Lateral Safety Constraint
-        lateral_h = None
         if self.state[5] != -0.001:
             L = 3.5  # Length of the merging lane
             d2 = self.state[5]  # Distance d2 from limo_state message
@@ -90,7 +88,7 @@ class QPSolverCAV1:
                 b = np.append(b, [LfB + h])
                 lateral_h = h
 
-                # ##print lateral CBF values
+                #print lateral CBF values
                 #print(f"Lateral h: {h}")
                 #current_time = rospy.Time.now() - self.start_time
                 #self.lateral_h_values.append(h)
@@ -122,8 +120,7 @@ class QPSolverCAV1:
 
     def recalc_qp(self):
         if self.state is not None:
-            vd = 0.3 # Reference velocity is the current velocity for simplicity
-            u = self.OCBF_SecondOrderDynamics(self.state, vd)
+            u = self.OCBF_SecondOrderDynamics()
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u
             print("qp 1 u", u)

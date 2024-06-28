@@ -181,17 +181,6 @@ class CAV:
         steering_angle = max(min(steering_angle, 7000), -7000)
         return steering_angle, lateral_error, e_int
 
-    #def pid_longitudinal_controller(self, desired_velocity, actual_velocity, e_prev, e_int):
-    #    kp = 0.001
-    #    ki = 0.001
-    #    kd = 0.05
-    #    error = desired_velocity - actual_velocity
-    #    e_int += error * self.delta_t
-    #    e_der = (error - e_prev) / self.delta_t
-    #    control_input = kp * error + ki * e_int + kd * e_der
-    #    control_input = max(min(control_input, 2), -4)
-    #    return control_input, error, e_int
-
     def run(self):
         self.kp, self.ki, self.kd = self.PIDs[self.current]
         self.current_line = self.lines[self.current]
@@ -249,9 +238,7 @@ class CAV:
 
         steering_angle, self.e_prev_lateral, self.e_int_lateral = self.pid_lateral_controller(lateral_error, self.e_prev_lateral, self.e_int_lateral)
         control_input = -1
-        #control_input, self.e_prev_longitudinal, self.e_int_longitudinal = self.pid_longitudinal_controller(desired_velocity, actual_velocity, self.e_prev_longitudinal, self.e_int_longitudinal)
-
-        desired_velocity = min(0.9, max(0, desired_velocity))
+        desired_velocity = min(0.8, max(0, desired_velocity))
         #print("lateral_error of", self.ID, lateral_error)
         #rospy.loginfo(f"CAV{self.ID} Control Info - Steering Angle: {steering_angle}, Desired Velocity: {desired_velocity}, Control Input: {control_input}")
 

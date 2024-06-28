@@ -2,10 +2,10 @@ from cav_project.msg import limo_state, limo_state_matrix
 from cav_class import CAV
 
 def search_ahead(order_list, limo_num):
-    limo_current = order_list[limo_num].current
+    limo_next = order_list[limo_num].next
 
     for i in range(limo_num-1, -1, -1):
-        if order_list[limo_num].current_line == order_list[i].current_line:
+        if order_list[limo_num].current_line == order_list[i].current_line:# or order_list[limo_num].lines[limo_next] == order_list[i].current_line:
             front_limo = i
             break
         else:
@@ -28,8 +28,8 @@ def calc_manhattan_distance(order_list, limo_num, front_num):
 
     if front_limo.current_line != limo.current_line:
         distance = calc_distance(limo.position_x, limo.position_y, limo.current_end_pt[0], limo.current_end_pt[1])
-        for i in range (cav.next, front_cav.current):
-            distance += cav.dist[i]
+        for i in range (limo.next, front_limo.current):
+            distance += limo.dist[i]
 
     else:
         distance = calc_distance(limo.position_x, limo.position_z, front_limo.position_x, front_limo.position_z)
@@ -42,7 +42,6 @@ def calc_qp_info(order_list, limo_num):
 
     limo = order_list[limo_num]
     limo_current = limo.current
-    limo_next = limo.next
     collision_pt = limo.current_end_pt
     starting_pt = limo.points[limo_current]
 
@@ -56,7 +55,6 @@ def calc_qp_info(order_list, limo_num):
         d2 = -1
     else:
         previous_limo = order_list[previous_num]
-        previous_current = previous_limo.current
         dk = calc_distance(previous_limo.position_x, previous_limo.position_z, collision_pt[0], collision_pt[1])
         di = calc_distance(limo.position_x, limo.position_z, collision_pt[0], collision_pt[1])
         d2 = di - dk

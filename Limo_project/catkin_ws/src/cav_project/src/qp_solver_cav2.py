@@ -12,8 +12,8 @@ class QPSolverCAV2:
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1 # Maximum control input (acceleration)
-        self.phiRearEnd = 1.8# Reaction time for rear-end safety constraint
-        self.phiLateral = 3.3# Reaction time for lateral safety constraint
+        self.phiRearEnd = 4.8 # Reaction time for rear-end safety constraint
+        self.phiLateral = 3.3 # Reaction time for lateral safety constraint
         self.deltaSafetyDistance = 0.3# Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
@@ -29,16 +29,16 @@ class QPSolverCAV2:
         for limo in data.limos:
             if limo.limoID == self.cav2_id:
                 self.x0 = [limo.d0/1000, limo.vel, limo.d2/1000]
-                self.state = [limo.limoID, limo.vel, limo.d0/1000, limo.d1/1000, limo.v1, limo.d2/1000, limo.v2]
+                self.state = [limo.limoID, limo.vel, limo.d0/1000, limo.d1/1000, limo.v1, limo.d2/1000, limo.v2, limo.vd]
 
 
-    def OCBF_SecondOrderDynamics(self, state, vd):
-        ocpar = [-0.593787660013256, 1.41421356237309, 0, 0, 2.38168230431317, 1.68410370801184]
-        c = np.array(ocpar)
+    def OCBF_SecondOrderDynamics(self):
+        #ocpar = [-0.593787660013256, 1.41421356237309, 0, 0, 2.38168230431317, 1.68410370801184]
+        #c = np.array(ocpar)
         x0 = self.x0  # x0[0] is d0, x0[1] is vel, x0[2] is d2
         eps = 10
         psc = 0.1
-        t = 0.1
+        #t = 0.1
 
         # Reference control input
         u_ref = 1 #c[0] * t + c[1]
@@ -48,6 +48,7 @@ class QPSolverCAV2:
         b_vmin = x0[1] - self.v_min
 
         # CLF
+        vd = self.state[7]
         phi0 = -eps * (x0[1] - vd) ** 2
         phi1 = 2 * (x0[1] - vd)
 
@@ -55,11 +56,10 @@ class QPSolverCAV2:
         A = np.array([[1, 0], [-1, 0], [phi1, -1], [1, 0], [-1, 0]])
         b = np.array([self.u_max, -self.u_min, phi0, b_vmax, b_vmin])
 
-        # ##print CLF values
+        #print CLF values
         #print(f"CLF phi0: {phi0}, phi1: {phi1}")
 
         # Rear-end Safety Constraints
-        rear_end_h = None
         if self.state[3] != -0.001:
             print("qp two, rear end")
             d1 = self.state[3]
@@ -72,11 +72,10 @@ class QPSolverCAV2:
                 b = np.append(b, [LfB + h])
                 rear_end_h = h
 
-                # ##print rear-end CBF values
+                #print rear-end CBF values
                 #print(f"Rear-end h: {h}")
 
         # Lateral Safety Constraint
-        lateral_h = None
         if self.state[5] != -0.001:
             L = 3.5  # Length of the merging lane
             d2 = self.state[5]  # Distance d2 from limo_state message
@@ -91,11 +90,11 @@ class QPSolverCAV2:
                 b = np.append(b, [LfB + h])
                 lateral_h = h
 
-                # ##print lateral CBF values
+                #print lateral CBF values
                 #print(f"Lateral h: {h}")
-                current_time = rospy.Time.now() - self.start_time
-                self.lateral_h_values.append(h)
-                self.time_values.append(current_time.to_sec())
+                #current_time = rospy.Time.now() - self.start_time
+                #self.lateral_h_values.append(h)
+                #self.time_values.append(current_time.to_sec())
 
         # QP formulation
         H = matrix([[1, 0], [0, psc]], tc='d')
@@ -112,7 +111,7 @@ class QPSolverCAV2:
             u = self.u_min
 
         # Evaluate and ##print the actual constraint values
-        delta = 1
+        #delta = 1
         #print(f"Evaluated CLF constraint: {phi1 * u - phi0 - delta}")
         #if rear_end_h is not None:
             #print(f"Evaluated Rear-end constraint: {-LgB * u + LfB + rear_end_h}")
@@ -123,8 +122,7 @@ class QPSolverCAV2:
 
     def recalc_qp(self):
         if self.state is not None:
-            vd = 0.5 # Reference velocity is the current velocity for simplicity
-            u = self.OCBF_SecondOrderDynamics(self.state, vd)
+            u = self.OCBF_SecondOrderDynamics()
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u
             #print("qp 2 u", u)
