@@ -71,8 +71,6 @@ class CAV:
         self.cav_info = msg
         self.velocity = self.cav_info.vel.data
 
-
-
     def generate_map(self, isMain, enter, exit):
         #coordinates of every critical point
         self.pt_a = (2933, -1980)
@@ -85,12 +83,12 @@ class CAV:
         self.pt_h = (394, 554)
         self.pt_i = (1560, -1945)
         self.pt_j = (-2070, -1992)
-        self.pt_k = (1, 1)
-        self.pt_l = (1, 1)
+        self.pt_k = (-2007, 243)
+        self.pt_l = (-2028, 639)
         self.pt_m = (-1954, 2640)
         self.pt_n = (-2439, -1980)
-        self.pt_o = (1, 1)
-        self.pt_p = (1, 1)
+        self.pt_o = (-2460, 253)
+        self.pt_p = (-2454, 628)
         self.pt_q = (-2356, 2654)
         self.pt_r = (-4683, -1980)
         self.pt_s = (-4683, 259)
@@ -161,14 +159,27 @@ class CAV:
         self.path_B_PID = (0.0008, 0.00008, 0.003)
         self.path_C_PID = (0.0008, 0.00008, 0.005)# values from tuuning qith qp node 0.00003, 0.00004, 0.0005
         self.path_D_PID = (0.0002, 0.00005, 0.001)
+        self.path_D2_PID = (0.0007, 0.00008, 0.001)
         self.path_E_PID = (0.0005, 0.00003, 0.003) #(0.0005, -0.00005, -0.001)
         self.path_F_PID = (0.0008, 0.00008, 0.003)
-        self.path_G_PID = (0.0008, 0.00008, 0.003)
-        self.path_H_PID = (0.0008, 0.00008, 0.003)
-        self.path_I_PID = (0.0008, 0.00008, 0.003)
-        self.path_J_PID = (0.0008, 0.00008, 0.003)
+
+        self.path_G1_PID = (0.0008, 0.00008, 0.003)
+        self.path_G2_PID = (0.0008, 0.00008, 0.003)
+        self.path_G3_PID = (0.0008, 0.00008, 0.003)
+
+        self.path_H1_PID = (0.0008, 0.00008, 0.003)
+        self.path_H2_PID = (0.0008, 0.00008, 0.003)
+        self.path_H3_PID = (0.0008, 0.00008, 0.003)
+
+        self.path_I1_PID = (0.0008, 0.00008, 0.003)
+        self.path_I2_PID = (0.0008, 0.00008, 0.003)
+        self.path_I3_PID = (0.0008, 0.00008, 0.003)
+
+        self.path_J1_PID = (0.0008, 0.00008, 0.003)
+        self.path_J2_PID = (0.0008, 0.00008, 0.003)
+        self.path_J3_PID = (0.0008, 0.00008, 0.003)
+
         self.path_K_PID = (0.0008, 0.00008, 0.003)
-        self.path_K2_PID = (0.0007, 0.00008, 0.001)
 
         #PID values of each circle, each element is a tuple (kp, ki, kd)
         self.circle_a_PID = (-0.7, -0.00045, -0.050)
@@ -194,6 +205,7 @@ class CAV:
         self.circle_u_PID = (-0.050, -0.00045, -0.037)
 
         #distances between each critical point
+        #instead of distances, write a function that takes in self.points and returns all the distances between the points
         self.path_A_dist = self.calc_distance(self.pt_a, self.pt_r)
         self.path_B_dist = self.calc_distance(self.pt_a, self.pt_b)
         self.path_C_dist = self.calc_distance(self.pt_b, self.pt_u)
@@ -239,9 +251,39 @@ class CAV:
             #array to store all distances of paths, in order of traversal
             self.dist = [self.path_E_dist, self.path_D2_dist, self.path_A_dist, self.path_B_dist, self.path_C_dist]
     
-        if enter == 'm' and exit == "h":
-            self.points = self.point + []
-            self.lines = self.lines + []
+        if enter == 'H':
+            self.lines = [self.path_H, self.path_H, self.path_H]
+            self.points = [self.pt_n, self.pt_o, self.pt_p]
+            self.ranges = [self.act_range_q, self.act_range_p, self.act_range_o]
+            self.circles = [self.circle_q, self.circle_p, self.circle_o]
+            self.PIDs = [self.path_H1_PID, self.path_H2_PID, self.path_H3_PID]
+            self.curve_PIDs = [self.circle_q_PID, self.circle_p_PID, self.circle_o_PID]
+            self.dist = [self.path_H_dist]
+
+        elif enter == 'G':
+            self.lines = [self.path_G, self.path_G, self.path_G]
+            self.points = [self.pt_m, self.pt_l, self.pt_k]
+            self.ranges = [self.act_range_m, self.act_range_l, self.act_range_k]
+            self.circles = [self.circle_m, self.circle_l, self.circle_k]
+            self.PIDs = [self.path_G1_PID, self.path_G2_PID, self.path_G3_PID]
+            self.curve_PIDs = [self.circle_m_PID, self.circle_l_PID, self.circle_k_PID]
+            self.dist = [self.path_G_dist]
+        elif enter == 'J':
+            self.lines = [self.path_J, self.path_J, self.path_J]
+            self.points = [self.pt_t, self.pt_s, self.pt_g]
+            self.ranges = [self.act_range_t, self.act_range_p, self.act_range_l]
+            self.circles = [self.circle_t, self.circle_s, self.circle_g]
+            self.PIDs = [self.path_J1_PID, self.path_J2_PID, self.path_J3_PID]
+            self.curve_PIDs = [self.circle_t_PID, self.circle_s_PID, self.circle_g_PID]
+            self.dist = [self.path_J_dist]
+        else:
+            self.lines = [self.path_I, self.path_I, self.path_I]
+            self.points = [self.pt_g, self.pt_k, self.pt_o]
+            self.ranges = [self.act_range_g, self.act_range_k, self.act_range_o]
+            self.circles = [self.circle_g, self.circle_k, self.circle_o]
+            self.PIDs = [self.path_I1_PID, self.path_I2_PID, self.path_I3_PID]
+            self.curve_PIDs = [self.circle_g_PID, self.circle_k_PID, self.circle_o_PID]
+            self.dist = [self.path_I_dist]
 
 
 
