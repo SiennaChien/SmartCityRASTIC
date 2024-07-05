@@ -80,7 +80,7 @@ class CAV:
         self.pt_c = (1922, -1977)
         self.pt_d = (1825, -652)
         self.pt_e = (2040, 2519)
-        self.pt_f = (683, 2536) 
+        self.pt_f = (683, 2536)
         self.pt_g = (29, 222)
         self.pt_h = (394, 554)
         self.pt_i = (1560, -1945)
@@ -117,22 +117,22 @@ class CAV:
         self.circle_d = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) #in practice this is not use
         self.circle_e = (self.pt_e[0] + self.lane_width, self.pt_e[1] - self.lane_width, self.lane_width/1.5)
         self.circle_f = (self.pt_f[0] + self.lane_width, self.pt_f[1] - self.lane_width, self.lane_width/2)
-        #self.circle_g = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) 
-        self.circle_h = (self.pt_h[0] + self.lane_width, self.pt_h[1] - self.lane_width, self.lane_width) 
-        self.circle_i = (self.pt_i[0] + self.lane_width, self.pt_i[1] - self.lane_width, self.lane_width) 
-        self.circle_j = (self.pt_j[0] + self.lane_width, self.pt_j[1] - self.lane_width, self.lane_width) 
-        self.circle_k = (self.pt_k[0] + self.lane_width, self.pt_k[1] - self.lane_width, self.lane_width) 
-        self.circle_l = (self.pt_l[0] + self.lane_width, self.pt_l[1] - self.lane_width, self.lane_width) 
-        self.circle_m = (self.pt_m[0] + self.lane_width, self.pt_m[1] - self.lane_width, self.lane_width) 
-        self.circle_n = (self.pt_n[0] + self.lane_width, self.pt_n[1] - self.lane_width, self.lane_width) 
-        self.circle_o = (self.pt_o[0] + self.lane_width, self.pt_o[1] - self.lane_width, self.lane_width) 
-        self.circle_p = (self.pt_p[0] + self.lane_width, self.pt_p[1] - self.lane_width, self.lane_width) 
-        self.circle_q = (self.pt_q[0] + self.lane_width, self.pt_q[1] - self.lane_width, self.lane_width) 
-        self.circle_r = (self.pt_r[0] + self.lane_width, self.pt_r[1] - self.lane_width, self.lane_width) 
-        self.circle_s = (self.pt_s[0] + self.lane_width, self.pt_s[1] - self.lane_width, self.lane_width) 
-        self.circle_t = (self.pt_t[0] + self.lane_width, self.pt_t[1] - self.lane_width, self.lane_width) 
-        self.circle_u = (self.pt_u[0] + self.lane_width, self.pt_u[1] - self.lane_width, self.lane_width) 
-        
+        #self.circle_g = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width)
+        self.circle_h = (self.pt_h[0] + self.lane_width, self.pt_h[1] - self.lane_width, self.lane_width)
+        self.circle_i = (self.pt_i[0] + self.lane_width, self.pt_i[1] - self.lane_width, self.lane_width)
+        self.circle_j = (self.pt_j[0] + self.lane_width, self.pt_j[1] - self.lane_width, self.lane_width)
+        self.circle_k = (self.pt_k[0] + self.lane_width, self.pt_k[1] - self.lane_width, self.lane_width)
+        self.circle_l = (self.pt_l[0] + self.lane_width, self.pt_l[1] - self.lane_width, self.lane_width)
+        self.circle_m = (self.pt_m[0] + self.lane_width, self.pt_m[1] - self.lane_width, self.lane_width)
+        self.circle_n = (self.pt_n[0] + self.lane_width, self.pt_n[1] - self.lane_width, self.lane_width)
+        self.circle_o = (self.pt_o[0] + self.lane_width, self.pt_o[1] - self.lane_width, self.lane_width)
+        self.circle_p = (self.pt_p[0] + self.lane_width, self.pt_p[1] - self.lane_width, self.lane_width)
+        self.circle_q = (self.pt_q[0] + self.lane_width, self.pt_q[1] - self.lane_width, self.lane_width)
+        self.circle_r = (self.pt_r[0] + self.lane_width, self.pt_r[1] - self.lane_width, self.lane_width)
+        self.circle_s = (self.pt_s[0] + self.lane_width, self.pt_s[1] - self.lane_width, self.lane_width)
+        self.circle_t = (self.pt_t[0] + self.lane_width, self.pt_t[1] - self.lane_width, self.lane_width)
+        self.circle_u = (self.pt_u[0] + self.lane_width, self.pt_u[1] - self.lane_width, self.lane_width)
+
         #the ranges near each corner that activates the circle path for the limo to follow
         self.act_range_a = (self.lane_width * 1, self.lane_width / 1.7)
         self.act_range_b = (self.lane_width * 0.8, self.lane_width * 1)
@@ -238,7 +238,7 @@ class CAV:
             self.curve_PIDs = [self.circle_f_PID, self.circle_d_PID, self.circle_c_PID, self.circle_a_PID, self.circle_b_PID]
             #array to store all distances of paths, in order of traversal
             self.dist = [self.path_E_dist, self.path_D2_dist, self.path_A_dist, self.path_B_dist, self.path_C_dist]
-    
+
         if enter == 'm' and exit == "h":
             self.points = self.point + []
             self.lines = self.lines + []

@@ -17,13 +17,12 @@ class MainCoordinator:
         self.limo_state_matrix_pub = rospy.Publisher('/limo_state_matrix', limo_state_matrix, queue_size=10)
         self.rate = rospy.Rate(15)
 
-
     def run(self):
         cav1 = CAV("limo770", False)
         cav2 = CAV("limo155", True)
         cav3 = CAV("limo795", True)
 
-        order_list = [cav2, cav1, cav3]
+        order_list = [cav2, cav3, cav1]
 
         while not rospy.is_shutdown():
             limo_state_mat = limo_state_matrix()
@@ -32,7 +31,8 @@ class MainCoordinator:
                 limo_state_mat.limos.append(limo_state_msg)
             self.limo_state_matrix_pub.publish(limo_state_mat)
 
-            if True: #self.qp_solution_cav1 and self.qp_solution_cav2 and self.cav_info_cav1 and self.cav_info_cav2:
+            if True: #cav1.qp_solution_limo770 and cav2.qp_solution_limo155 and cav3.qp_solution_limo795 and \
+                #cav1.cav_info_limo770 and cav2.cav_info_limo155 and cav3.cav_info_limo795:
                 cav1.run()
                 cav2.run()
                 cav3.run()

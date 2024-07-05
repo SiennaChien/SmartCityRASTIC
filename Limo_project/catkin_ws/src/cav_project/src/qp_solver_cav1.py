@@ -12,13 +12,13 @@ class QPSolverCAV1:
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1 # Maximum control input (acceleration)
-        self.phiRearEnd = 4.8# Reaction time for rear-end safety constraint
+        self.phiRearEnd = 1.8# Reaction time for rear-end safety constraint
         self.phiLateral = 3.3# Reaction time for lateral safety constraint
         self.deltaSafetyDistance = 0.3# Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
 
-        rospy.init_node("qp_solver_" + self.cav2_id)
+        rospy.init_node("qp_solver_" + self.cav1_id)
         self.qp_solution_pub = rospy.Publisher('/qp_solution_' + self.cav1_id, QP_solution, queue_size=10)
         rospy.Subscriber('/limo_state_matrix', limo_state_matrix, self.limo_state_callback)
 

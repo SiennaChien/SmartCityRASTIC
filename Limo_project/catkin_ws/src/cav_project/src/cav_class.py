@@ -104,19 +104,19 @@ class CAV:
         self.merging_circle = (self.merging_pt_x + self.lane_width, self.merging_pt_y - self.lane_width, self.lane_width) #in practice this is not use
 
         #the ranges near each corner that activates the circle path for the limo to follow
-        self.right_top_activation_range = (self.lane_width / 1.3, self.lane_width * 1.1)
-        self.right_center_activation_range = (self.lane_width * 1.1, self.lane_width)
-        self.right_bottom_activation_range = (self.lane_width * 1.2, self.lane_width)
-        self.left_top_activation_range = (self.lane_width * 1.1, self.lane_width / 1.7)
-        self.left_center_activation_range = (self.lane_width / 1.5, self.lane_width * 1)
+        self.right_top_activation_range = (self.lane_width / 1.3, self.lane_width * 0.8)
+        self.right_center_activation_range = (self.lane_width * 0.9, self.lane_width * 0.6)
+        self.right_bottom_activation_range = (self.lane_width * 1.2, self.lane_width * 0.9)
+        self.left_top_activation_range = (self.lane_width * 1.1, self.lane_width / 1.8)
+        self.left_center_activation_range = (self.lane_width / 1.5, self.lane_width * 1.3)
         self.merging_pt_activation_range = (self.lane_width * 1, self.lane_width * 0.5)
 
-        # self.right_top_activation_range = (self.lane_width * 0.8, self.lane_width * 1)
-        # self.right_center_activation_range = (self.lane_width * 1, self.lane_width * 0.8)
-        # self.right_bottom_activation_range = (self.lane_width * 1, self.lane_width*1.2)
-        # self.left_top_activation_range = (self.lane_width * 1, self.lane_width / 1.7)
-        # self.left_center_activation_range = (self.lane_width / 1, self.lane_width * 1)
-        # self.merging_pt_activation_range = (self.lane_width * 0.7, self.lane_width * 0.5)
+        #self.right_top_activation_range = (self.lane_width * 0.8, self.lane_width * 1)
+        #self.right_center_activation_range = (self.lane_width * 1, self.lane_width * 0.8)
+        #self.right_bottom_activation_range = (self.lane_width * 1, self.lane_width*1.2)
+        #self.left_top_activation_range = (self.lane_width * 0.5, self.lane_width / 1.8)
+        #self.left_center_activation_range = (self.lane_width / 1, self.lane_width * 1)
+        #self.merging_pt_activation_range = (self.lane_width * 0.7, self.lane_width * 0.5)
 
         #PID values of each line, each element is a tuple (kp, ki, kd)
         self.merge_path_PID = (0.0005, 0.00005, 0.001) #0.0005, -0.00003, -0.003)
