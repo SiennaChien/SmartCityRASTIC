@@ -15,8 +15,7 @@ def main():
     v_ref_CAV1 = 0.5 # set between 0.5 and 0.6
     within_critical_range = False
     line_changed = True
-    slow = 0.3
-    fast = 0.7
+    fast = 0.5
 
     #depending on if the car starts at main path or merging path, initialize different starting paths, points, and PID values
     current = 0
@@ -29,7 +28,7 @@ def main():
         #if the cav is near a critical point (which are turning corners), set path to a circle, change starting point and PID values to fit
         if abs(CAV1.position_x  - current_end_pt[0])  < CAV1.ranges[next][0] and \
            abs(CAV1.position_z - current_end_pt[1]) < CAV1.ranges[next][1]:
-            if next == 3:
+            if next == len(CAV1.points):
                 v_ref_CAV1 = 0
                 eprev_lateral_1,eint_lateral_1,drive_msg_CAV1 = CAV1.control(e,v_ref_CAV1, eprev_lateral_1,eint_lateral_1,dt)
                 CAV1.pub.publish(drive_msg_CAV1)
@@ -37,8 +36,8 @@ def main():
                 break
             within_critical_range = True
             line_changed = False
-            current_line = CAV1.lines[current]
-            e = -(current_line[0]*CAV1.position_x + current_line[1]*CAV1.position_z + current_line[2])/((current_line[0]**2 + current_line[1]**2)**0.5)
+            CAV1.kp, CAV1.ki, CAV1.kd = CAV1.curve_PIDs[next]
+            e = (((CAV1.position_x - CAV1.circles[next][0])**2 + (CAV1.position_z - CAV1.circles[next][1])**2)**0.5 - CAV1.circles[next][2])
             v_ref_CAV1 = fast
             print("in activation range", next)
 
@@ -54,10 +53,6 @@ def main():
         if not line_changed and not within_critical_range:
             current = current+1
             next = next+1
-            if current >  3 or next > 4:
-                v_ref_CAV1 = 0
-                print("finished running")
-                break
             line_changed = True
             within_critical_range = False
             v_ref_CAV1 = fast

@@ -78,7 +78,7 @@ class CAV():
         self.circle_d = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) #in practice this is not use
         self.circle_e = (self.pt_e[0] + self.lane_width, self.pt_e[1] - self.lane_width, self.lane_width/1.5)
         self.circle_f = (self.pt_f[0] + self.lane_width, self.pt_f[1] - self.lane_width, self.lane_width/2)
-        #self.circle_g = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) 
+        self.circle_g = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) 
         self.circle_h = (self.pt_h[0] + self.lane_width, self.pt_h[1] - self.lane_width, self.lane_width) 
         self.circle_i = (self.pt_i[0] + self.lane_width, self.pt_i[1] - self.lane_width, self.lane_width) 
         self.circle_j = (self.pt_j[0] + self.lane_width, self.pt_j[1] - self.lane_width, self.lane_width) 
@@ -101,7 +101,7 @@ class CAV():
         self.act_range_d = (self.lane_width * 0.7, self.lane_width * 0.5)
         self.act_range_e = (self.lane_width * 1, self.lane_width * 0.8)
         self.act_range_f = (self.lane_width * 1, self.lane_width*1.2)
-        #self.act_range_g = (self.lane_width * 1, self.lane_width * 1)
+        self.act_range_g = (self.lane_width * 1, self.lane_width * 1)
         self.act_range_h = (self.lane_width * 1, self.lane_width * 1)
         self.act_range_i = (self.lane_width * 1, self.lane_width * 1)
         self.act_range_j = (self.lane_width * 1, self.lane_width * 1)
@@ -125,19 +125,23 @@ class CAV():
         self.path_D2_PID = (0.0007, 0.00008, 0.001)
         self.path_E_PID = (0.0005, 0.00003, 0.003)
         self.path_F_PID = (0.0008, 0.00008, 0.003)
-
+        
+        self.path_G_PID = (0.0003, 0.00004, 0.001)
         self.path_G1_PID = (0.0003, 0.00004, 0.001)
         self.path_G2_PID = (0.0003, 0.00004, 0.001)
         self.path_G3_PID = (0.0003, 0.00004, 0.001)
-
+        
+        self.path_H_PID = (0.0003, 0.00004, 0.001)
         self.path_H1_PID = (0.0008, 0.00008, 0.003)
         self.path_H2_PID = (0.0008, 0.00008, 0.003)
         self.path_H3_PID = (0.0008, 0.00008, 0.003)
 
+        self.path_I_PID = (0.0003, 0.00004, 0.001)
         self.path_I1_PID = (0.0008, 0.00008, 0.003)
         self.path_I2_PID = (0.0008, 0.00008, 0.003)
         self.path_I3_PID = (0.0008, 0.00008, 0.003)
 
+        self.path_J_PID = (0.0003, 0.00004, 0.001)
         self.path_J1_PID = (0.0008, 0.00008, 0.003)
         self.path_J2_PID = (0.0008, 0.00008, 0.003)
         self.path_J3_PID = (0.0008, 0.00008, 0.003)
@@ -151,7 +155,7 @@ class CAV():
         self.circle_d_PID = (-0.0005, -0.00045, -0.003)
         self.circle_e_PID = (-0.0030, -0.000045, -0.0017)
         self.circle_f_PID = (-0.050, -0.00045, -0.037)
-        #self.circle_g_PID = (-0.050, -0.00045, -0.037)
+        self.circle_g_PID = (-0.050, -0.00045, -0.037)
         self.circle_h_PID = (-0.050, -0.00045, -0.037)
         self.circle_i_PID = (-0.050, -0.00045, -0.037)
         self.circle_j_PID = (-0.050, -0.00045, -0.037)
@@ -305,6 +309,7 @@ class CAV():
             self.dist = self.calc_dist_array(self.all_points)
 
 
+    #helper functions for generate_map()
     def generate_line(self, pt_1, pt_2):
         A = -(pt_2[1] - pt_1[1])
         B = -(pt_1[0] - pt_2[0])
@@ -315,7 +320,13 @@ class CAV():
         distance = ((pt_1[0]- pt_2[0]) ** 2 + (pt_1[1] - pt_2[1]) ** 2) ** 0.5
         return distance
     
-    #helper function for generate_map()
+    def calc_dist_array(self, points):
+        dist = []
+        for i in range(len(points)-1):
+            dist.append(self.calc_distance(points[i], points[i+1]))
+        return dist
+    
+    #lateral control functions
     def control(self,e,v_ref, eprev_lateral,eint_lateral,dt):
         if (eprev_lateral*e<=0):
             eint_lateral = 0
