@@ -2,8 +2,6 @@ from cav_project.msg import limo_state, limo_state_matrix
 from cav_class import CAV
 
 def search_ahead(order_list, limo_num):
-    limo_next = order_list[limo_num].next
-
     for i in range(limo_num-1, -1, -1):
         if order_list[limo_num].current_line == order_list[i].current_line:# or order_list[limo_num].lines[limo_next] == order_list[i].current_line:
             front_limo = i
