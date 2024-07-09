@@ -5,4 +5,6 @@ float64 d1
 float64 v1
 float64 d2
 float64 v2
+float64 d3
+float64 v3
 float64 vd

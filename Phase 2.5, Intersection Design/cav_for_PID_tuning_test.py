@@ -141,12 +141,12 @@ class CAV():
         self.path_I2_PID = (0.0008, 0.00008, 0.003)
         self.path_I3_PID = (0.0008, 0.00008, 0.003)
 
-        self.path_J_PID = (0.0003, 0.00004, 0.001)
-        self.path_J1_PID = (0.0008, 0.00008, 0.003)
-        self.path_J2_PID = (0.0008, 0.00008, 0.003)
-        self.path_J3_PID = (0.0008, 0.00008, 0.003)
+        self.path_J_PID = (-0.0003, -0.00004, -0.001)
+        self.path_J1_PID = (-0.0008, -0.00008, -0.003)
+        self.path_J2_PID = (-0.0008, -0.00008, -0.003)
+        self.path_J3_PID = (-0.0008, -0.00008, -0.003)
 
-        self.path_K_PID = (0.0008, 0.00008, 0.003)
+        self.path_K_PID = (-0.0008, -0.00008, -0.003)
 
         #PID values of each circle, each element is a tuple (kp, ki, kd)
         self.circle_a_PID = (-0.7, -0.00045, -0.050)
@@ -220,37 +220,36 @@ class CAV():
         
         #the three paths below are for tuning the straight intersection paths
         if enter == 'H':
-            self.lines = [self.path_H, self.path_H, self.path_H, self.path_H]
-            self.points = [self.pt_n, self.pt_o, self.pt_p, self.pt_q]
-            self.ranges = [self.act_range_q, self.act_range_p, self.act_range_o, self.act_range_q]
-            self.circles = [self.circle_q, self.circle_p, self.circle_o]
-            self.PIDs = [self.path_H3_PID, self.path_H2_PID, self.path_H1_PID]
-            self.curve_PIDs = [self.circle_q_PID, self.circle_p_PID, self.circle_o_PID]
+            self.lines = [self.path_H]
+            self.points = [self.pt_n, self.pt_q]
+            self.ranges = [self.act_range_n, self.act_range_q]
+            self.circles = [self.circle_q,self.circle_n]
+            self.PIDs = [self.path_H_PID]
+            self.curve_PIDs = [self.circle_n_PID, self.circle_q_PID]
             self.dist = [self.path_H_dist]
-
         elif enter == 'G':
-            self.lines = [self.path_G, self.path_G, self.path_G, self.path_G]
-            self.points = [self.pt_m, self.pt_l, self.pt_k, self.pt_j]
-            self.ranges = [self.act_range_m, self.act_range_l, self.act_range_k, self.act_range_q]
-            self.circles = [self.circle_m, self.circle_l, self.circle_k]
-            self.PIDs = [self.path_G1_PID, self.path_G2_PID, self.path_G3_PID]
-            self.curve_PIDs = [self.circle_m_PID, self.circle_l_PID, self.circle_k_PID]
+            self.lines = [self.path_G]
+            self.points = [self.pt_m, self.pt_j]
+            self.ranges = [self.act_range_m, self.act_range_j]
+            self.circles = [self.circle_m, self.circle_j]
+            self.PIDs = [self.path_G_PID]
+            self.curve_PIDs = [self.circle_m_PID, self.circle_j_PID]
             self.dist = [self.path_G_dist]
         elif enter == 'J':
-            self.lines = [self.path_J, self.path_J, self.path_J, self.path_J]
-            self.points = [self.pt_t, self.pt_p, self.pt_l, self.pt_h]
-            self.ranges = [self.act_range_t, self.act_range_p, self.act_range_l, self.act_range_h]
-            self.circles = [self.circle_t, self.circle_s, self.circle_g]
-            self.PIDs = [self.path_J1_PID, self.path_J2_PID, self.path_J3_PID]
-            self.curve_PIDs = [self.circle_t_PID, self.circle_s_PID, self.circle_g_PID]
+            self.lines = [self.path_J]
+            self.points = [self.pt_t, self.pt_h]
+            self.ranges = [self.act_range_t, self.act_range_h]
+            self.circles = [self.circle_t, self.circle_h]
+            self.PIDs = [self.path_J_PID]
+            self.curve_PIDs = [self.circle_t_PID, self.circle_h_PID]
             self.dist = [self.path_J_dist]
         elif enter == 'I':
-            self.lines = [self.path_I, self.path_I, self.path_I, self.path_I]
-            self.points = [self.pt_g, self.pt_k, self.pt_o, self.pt_s]
-            self.ranges = [self.act_range_g, self.act_range_k, self.act_range_o, self.act_range_s]
-            self.circles = [self.circle_g, self.circle_k, self.circle_o]
-            self.PIDs = [self.path_I3_PID, self.path_I2_PID, self.path_I1_PID]
-            self.curve_PIDs = [self.circle_g_PID, self.circle_k_PID, self.circle_o_PID]
+            self.lines = [self.path_I]
+            self.points = [self.pt_g, self.pt_s]
+            self.ranges = [self.act_range_g, self.act_range_s]
+            self.circles = [self.circle_g, self.circle_s]
+            self.PIDs = [self.path_I_PID]
+            self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID]
             self.dist = [self.path_I_dist]
 
         #the 6 paths below collectively traverse every line and turn of the intersection map
@@ -261,7 +260,7 @@ class CAV():
             self.circles = [self.circle_f, self.circle_u, self.circle_t, self.circle_h, self.circle_i, self.circle_a, self.circle_b, self.circle_f]
             self.PIDs = [self.path_C_PID, self.path_K_PID, self.path_J_PID, self.path_F_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
             self.curve_PIDs = [self.circle_f_PID, self.circle_u_PID, self.circle_t_PID, self.circle_h_PID, self.circle_i_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+            self.dist = self.calc_dist_array(self.points)
         
         elif enter == 'm'and exit == 'h':
             self.lines = [self.path_C, self.path_G, self.path_J, self.path_F, self.path_A, self.path_B, self.path_C]
@@ -270,7 +269,7 @@ class CAV():
             self.circles = [self.circle_f, self.circle_m, self.circle_l, self.circle_h, self.circle_i, self.circle_a, self.circle_b, self.circle_f]
             self.PIDs = [self.path_C_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
             self.curve_PIDs = [self.circle_f_PID, self.circle_m_PID, self.circle_l_PID, self.circle_h_PID, self.circle_i_PID,  self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+            self.dist = self.calc_dist_array(self.points)
         
         elif enter == 'n'and exit == 'q':
             self.lines = [self.path_C, self.path_K, self.path_A, self.path_H, self.path_I, self.path_K, self.path_A, self.path_H, self.path_C, self.path_K, self.path_J, self.path_H, self.path_C, self.path_K, self.path_A, self.path_B, self.path_C]
@@ -288,7 +287,7 @@ class CAV():
             self.circles = [self.circle_f, self.circle_m, self.circle_j, self.circle_a, self.circle_b, self.circle_f]
             self.PIDs = [self.path_C_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
             self.curve_PIDs = [self.circle_f_PID, self.circle_m_PID, self.circle_j_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+            self.dist = self.calc_dist_array(self.points)
         
         elif enter == 'g'and exit == 'j':
             self.lines = [self.path_I, self.path_G, self.path_A, self.path_B, self.path_C]
@@ -297,7 +296,7 @@ class CAV():
             self.circles = [self.circle_g, self.circle_k, self.circle_j, self.circle_a, self.circle_b, self.circle_f]
             self.PIDs = [self.path_I_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
             self.curve_PIDs = [self.circle_g_PID, self.circle_k_PID, self.circle_j_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+            self.dist = self.calc_dist_array(self.points)
         
         elif enter == 'g'and exit == 's':
             self.lines = [self.path_I, self.path_K, self.path_A, self.path_B, self.path_C]
@@ -306,7 +305,7 @@ class CAV():
             self.circles = [self.circle_g, self.circle_s, self.circle_r, self.circle_a, self.circle_b, self.circle_f]
             self.PIDs = [self.path_I_PID, self.path_K_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
             self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID, self.circle_r_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+            self.dist = self.calc_dist_array(self.	points)
 
 
     #helper functions for generate_map()

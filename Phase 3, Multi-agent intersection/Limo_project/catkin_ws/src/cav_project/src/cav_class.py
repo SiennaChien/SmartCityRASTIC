@@ -56,8 +56,12 @@ class CAV:
         self.line_changed = True
         self.current = 0
         self.next = 1
+        self.current_collision = 0
+        self.next_collision = 1
         self.current_line = self.lines[self.current]
         self.current_end_pt = self.points[self.next]
+        self.current_collision_pt1 = self.collision_pts[self.current_collision]
+        self.current_collision_pt2 = self.collision_pts[self.next_collision]
 
     def mocap_callback(self, msg):
         self.position_z = msg.pose.position.z * 1000
@@ -65,6 +69,8 @@ class CAV:
         self.position_y = msg.pose.position.y * 1000
         self.position_yaw = 0
         self.Receivedata = 1
+        self.current_position = (self.position_x, self.position_z)
+
     def qp_solution_callback(self, msg):
         self.qp_solution = msg
 
@@ -117,20 +123,20 @@ class CAV:
         self.circle_d = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) #in practice this is not use
         self.circle_e = (self.pt_e[0] + self.lane_width, self.pt_e[1] - self.lane_width, self.lane_width/1.5)
         self.circle_f = (self.pt_f[0] + self.lane_width, self.pt_f[1] - self.lane_width, self.lane_width/2)
-        self.circle_g = (self.pt_d[0] + self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) 
-        self.circle_h = (self.pt_h[0] + self.lane_width, self.pt_h[1] - self.lane_width, self.lane_width) 
-        self.circle_i = (self.pt_i[0] + self.lane_width, self.pt_i[1] - self.lane_width, self.lane_width) 
-        self.circle_j = (self.pt_j[0] + self.lane_width, self.pt_j[1] - self.lane_width, self.lane_width) 
+        self.circle_g = (self.pt_d[0] - self.lane_width, self.pt_d[1] - self.lane_width, self.lane_width) 
+        self.circle_h = (self.pt_h[0] - self.lane_width, self.pt_h[1] - self.lane_width, self.lane_width) 
+        self.circle_i = (self.pt_i[0] + self.lane_width, self.pt_i[1] + self.lane_width, self.lane_width) 
+        self.circle_j = (self.pt_j[0] + self.lane_width, self.pt_j[1] + self.lane_width, self.lane_width) 
         self.circle_k = (self.pt_k[0] + self.lane_width, self.pt_k[1] - self.lane_width, self.lane_width) 
-        self.circle_l = (self.pt_l[0] + self.lane_width, self.pt_l[1] - self.lane_width, self.lane_width) 
+        self.circle_l = (self.pt_l[0] + self.lane_width, self.pt_l[1] + self.lane_width, self.lane_width) 
         self.circle_m = (self.pt_m[0] + self.lane_width, self.pt_m[1] - self.lane_width, self.lane_width) 
-        self.circle_n = (self.pt_n[0] + self.lane_width, self.pt_n[1] - self.lane_width, self.lane_width) 
-        self.circle_o = (self.pt_o[0] + self.lane_width, self.pt_o[1] - self.lane_width, self.lane_width) 
-        self.circle_p = (self.pt_p[0] + self.lane_width, self.pt_p[1] - self.lane_width, self.lane_width) 
-        self.circle_q = (self.pt_q[0] + self.lane_width, self.pt_q[1] - self.lane_width, self.lane_width) 
-        self.circle_r = (self.pt_r[0] + self.lane_width, self.pt_r[1] - self.lane_width, self.lane_width) 
+        self.circle_n = (self.pt_n[0] - self.lane_width, self.pt_n[1] + self.lane_width, self.lane_width) 
+        self.circle_o = (self.pt_o[0] - self.lane_width, self.pt_o[1] - self.lane_width, self.lane_width) 
+        self.circle_p = (self.pt_p[0] - self.lane_width, self.pt_p[1] + self.lane_width, self.lane_width) 
+        self.circle_q = (self.pt_q[0] - self.lane_width, self.pt_q[1] - self.lane_width, self.lane_width) 
+        self.circle_r = (self.pt_r[0] + self.lane_width, self.pt_r[1] + self.lane_width, self.lane_width) 
         self.circle_s = (self.pt_s[0] + self.lane_width, self.pt_s[1] - self.lane_width, self.lane_width) 
-        self.circle_t = (self.pt_t[0] + self.lane_width, self.pt_t[1] - self.lane_width, self.lane_width) 
+        self.circle_t = (self.pt_t[0] + self.lane_width, self.pt_t[1] + self.lane_width, self.lane_width) 
         self.circle_u = (self.pt_u[0] + self.lane_width, self.pt_u[1] - self.lane_width, self.lane_width) 
         
         #the ranges near each corner that activates the circle path for the limo to follow
@@ -193,146 +199,128 @@ class CAV:
         self.circle_t_PID = (-0.050, -0.00045, -0.037)
         self.circle_u_PID = (-0.050, -0.00045, -0.037)
 
-        #distances between each critical point
-        #instead of distances, write a function that takes in self.points and returns all the distances between the points
-        self.path_A_dist = self.calc_distance(self.pt_a, self.pt_r)
-        self.path_B_dist = self.calc_distance(self.pt_a, self.pt_b)
-        self.path_C_dist = self.calc_distance(self.pt_b, self.pt_u)
-        self.path_D_dist = self.calc_distance(self.pt_c, self.pt_e)
-        self.path_D2_dist = self.calc_distance(self.pt_c, self.pt_d)
-        self.path_E_dist = self.calc_distance(self.pt_d, self.pt_f)
-        self.path_F_dist = self.calc_distance(self.pt_i, self.pt_h)
-        self.path_G_dist = self.calc_distance(self.pt_j, self.pt_m)
-        self.path_H_dist = self.calc_distance(self.pt_n, self.pt_q)
-        self.path_I_dist = self.calc_distance(self.pt_g, self.pt_s)
-        self.path_J_dist = self.calc_distance(self.pt_h, self.pt_t)
-        self.path_K_dist = self.calc_distance(self.pt_r, self.pt_u)
-
         if isMain: #if the limo runs along the main path
             #array to store all points at which the limo needs to turn, in order of traversal
-            self.turning_pts = [self.pt_e, self.pt_d, self.pt_c, self.pt_a, self.pt_b]
+            self.turning_pts = [self.pt_e, self.pt_c, self.pt_a, self.pt_b]
             #array to store all possible collision points, in order of traversal
-            self.collision_pts = [self.pt_e, self.pt_d, self.pt_c, self.pt_a, self.pt_b]
+            self.collision_pts = [self.pt_d]
             #array to store all points, turning and collision, in order of traversal
             self.all_pts = [self.pt_e, self.pt_d, self.pt_c, self.pt_a, self.pt_b]
             #array to store all lines, in order of traversal
-            self.lines = [self.path_D, self.path_D, self.path_A, self.path_B, self.path_C]
+            self.lines = [self.path_D, self.path_A, self.path_B, self.path_C]
             #the activation range of the corners, in order of traversal
-            self.ranges = [self.act_range_e, self.act_range_d, self.act_range_c, self.act_range_a, self.act_range_b]
+            self.ranges = [self.act_range_e, self.act_range_c, self.act_range_a, self.act_range_b]
             #array to store the circles for the corners, in order of traversal
-            self.circles = [self.circle_e, self.circle_d, self.circle_c, self.circle_a, self.circle_b]
+            self.circles = [self.circle_e, self.circle_c, self.circle_a, self.circle_b]
             #array to store PID values of each line, in order of traversal, each element is a tuple (kp, ki, kd)
-            self.PIDs = [self.path_D_PID, self.path_D_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+            self.PIDs = [self.path_D_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
             #array to store PID values of each circle, in order of traversal, each element is a tuple (kp, ki, kd)
-            self.curve_PIDs = [self.circle_e_PID, self.circle_d_PID, self.circle_c_PID, self.circle_a_PID, self.circle_b_PID]
+            self.curve_PIDs = [self.circle_e_PID, self.circle_c_PID, self.circle_a_PID, self.circle_b_PID]
             #array to store all distances of paths, in order of traversal
-            self.dist = [self.path_D_dist, self.path_D2_dist, self.path_A_dist, self.path_B_dist, self.path_C_dist]
+            self.dist = self.calc_dist_array(self.all_pts)
 
         else: #if the limo runs along the merging path
-            #array to store all points, in order of traversal
-            self.points = [self.pt_f, self.pt_d, self.pt_c, self.pt_a, self.pt_b]
-            #array to store all lines, in order of traversal
+            self.tuning_pts = [self.pt_f, self.pt_d, self.pt_c, self.pt_a, self.pt_b]
+            self.collision_pts = [self.pt_d]
+            self.all_pts = [self.pt_f, self.pt_d, self.pt_c, self.pt_a, self.pt_b]
             self.lines = [self.path_E, self.path_D, self.path_A, self.path_B, self.path_C]
-            #the activation range of the corners, in order of traversal
             self.ranges = [self.act_range_f, self.act_range_d, self.act_range_c, self.act_range_a, self.act_range_b]
-            #array to store the circles for the corners, in order of traversal
             self.circles = [self.circle_f, self.circle_d, self.circle_c, self.circle_a, self.circle_b]
-            #array to store PID values of each line, in order of traversal, each element is a tuple (kp, ki, kd)
             self.PIDs = [self.path_E_PID, self.path_D2_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            #array to store PID values of each circle, in order of traversal, each element is a tuple (kp, ki, kd)
             self.curve_PIDs = [self.circle_f_PID, self.circle_d_PID, self.circle_c_PID, self.circle_a_PID, self.circle_b_PID]
-            #array to store all distances of paths, in order of traversal
-            self.dist = [self.path_E_dist, self.path_D2_dist, self.path_A_dist, self.path_B_dist, self.path_C_dist]
+            self.dist = self.calc_dist_array(self.all_pts)
         
-        #the three paths below are for tuning the straight intersection paths
+        #the four paths below are for tuning the straight intersection paths
         if enter == 'H':
-            self.lines = [self.path_H, self.path_H, self.path_H, self.path_H]
-            self.points = [self.pt_n, self.pt_o, self.pt_p, self.pt_q]
-            self.ranges = [self.act_range_q, self.act_range_p, self.act_range_o, self.act_range_q]
-            self.circles = [self.circle_q, self.circle_p, self.circle_o]
-            self.PIDs = [self.path_H3_PID, self.path_H2_PID, self.path_H1_PID]
-            self.curve_PIDs = [self.circle_q_PID, self.circle_p_PID, self.circle_o_PID]
-            self.dist = [self.path_H_dist]
+            self.lines = [self.path_H]
+            self.collision_pts = [self.pt_o, self.pt_p]
+            self.tuning_pts = [self.pt_n, self.pt_q]
+            self.all_pts = [self.pt_n, self.pt_o, self.pt_p, self.pt_q]
+            self.ranges = [self.act_range_n, self.act_range_q]
+            self.circles = [self.circle_n,self.circle_q]
+            self.PIDs = [self.path_H_PID]
+            self.curve_PIDs = [self.circle_n_PID, self.circle_q_PID]
+            self.dist = self.calc_dist_array(self.all_pts)
+        
+        # elif enter == 'G':
+        #     self.lines = [self.path_G]
+        #     self.points = [self.pt_m, self.pt_j]
+        #     self.ranges = [self.act_range_m, self.act_range_j]
+        #     self.circles = [self.circle_m, self.circle_j]
+        #     self.PIDs = [self.path_G_PID]
+        #     self.curve_PIDs = [self.circle_m_PID, self.circle_j_PID]
+        #     self.dist = self.calc_dist_array(self.points)
+        # elif enter == 'J':
+        #     self.lines = [self.path_J]
+        #     self.points = [self.pt_t, self.pt_h]
+        #     self.ranges = [self.act_range_t, self.act_range_h]
+        #     self.circles = [self.circle_t, self.circle_h]
+        #     self.PIDs = [self.path_J_PID]
+        #     self.curve_PIDs = [self.circle_t_PID, self.circle_h_PID]
+        #     self.dist = self.calc_dist_array(self.points)
+        # elif enter == 'I':
+        #     self.lines = [self.path_I]
+        #     self.points = [self.pt_g, self.pt_s]
+        #     self.ranges = [self.act_range_g, self.act_range_s]
+        #     self.circles = [self.circle_g, self.circle_s]
+        #     self.PIDs = [self.path_I_PID]
+        #     self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID]
+        #     self.dist = self.calc_dist_array(self.points)
 
-        elif enter == 'G':
-            self.lines = [self.path_G, self.path_G, self.path_G, self.path_G]
-            self.points = [self.pt_m, self.pt_l, self.pt_k, self.pt_j]
-            self.ranges = [self.act_range_m, self.act_range_l, self.act_range_k, self.act_range_q]
-            self.circles = [self.circle_m, self.circle_l, self.circle_k]
-            self.PIDs = [self.path_G1_PID, self.path_G2_PID, self.path_G3_PID]
-            self.curve_PIDs = [self.circle_m_PID, self.circle_l_PID, self.circle_k_PID]
-            self.dist = [self.path_G_dist]
-        elif enter == 'J':
-            self.lines = [self.path_J, self.path_J, self.path_J, self.path_J]
-            self.points = [self.pt_t, self.pt_p, self.pt_l, self.pt_h]
-            self.ranges = [self.act_range_t, self.act_range_p, self.act_range_l, self.act_range_h]
-            self.circles = [self.circle_t, self.circle_s, self.circle_g]
-            self.PIDs = [self.path_J1_PID, self.path_J2_PID, self.path_J3_PID]
-            self.curve_PIDs = [self.circle_t_PID, self.circle_s_PID, self.circle_g_PID]
-            self.dist = [self.path_J_dist]
-        elif enter == 'I':
-            self.lines = [self.path_I, self.path_I, self.path_I, self.path_I]
-            self.points = [self.pt_g, self.pt_k, self.pt_o, self.pt_s]
-            self.ranges = [self.act_range_g, self.act_range_k, self.act_range_o, self.act_range_s]
-            self.circles = [self.circle_g, self.circle_k, self.circle_o]
-            self.PIDs = [self.path_I3_PID, self.path_I2_PID, self.path_I1_PID]
-            self.curve_PIDs = [self.circle_g_PID, self.circle_k_PID, self.circle_o_PID]
-            self.dist = [self.path_I_dist]
-
-        #the 6 paths below collectively traverse every line and turn of the intersection map
-        elif enter == 't'and exit == 'h':
-            self.lines = [self.path_C, self.path_K, self.path_J, self.path_F, self.path_A, self.path_B, self.path_C]
-            self.points = [self.pt_f, self.pt_u, self.pt_t, self.pt_h, self.pt_i, self.pt_a, self.pt_b, self.pt_f]
-            self.ranges = [self.act_range_f, self.act_range_u, self.act_range_t, self.act_range_h, self.act_range_i, self.act_range_a, self.act_range_b, self.act_range_f]
-            self.circles = [self.circle_f, self.circle_u, self.circle_t, self.circle_h, self.circle_i, self.circle_a, self.circle_b, self.circle_f]
-            self.PIDs = [self.path_C_PID, self.path_K_PID, self.path_J_PID, self.path_F_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            self.curve_PIDs = [self.circle_f_PID, self.circle_u_PID, self.circle_t_PID, self.circle_h_PID, self.circle_i_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+        # #the 6 paths below collectively traverse every line and turn of the intersection map
+        # elif enter == 't'and exit == 'h':
+        #     self.lines = [self.path_C, self.path_K, self.path_J, self.path_F, self.path_A, self.path_B, self.path_C]
+        #     self.points = [self.pt_f, self.pt_u, self.pt_t, self.pt_h, self.pt_i, self.pt_a, self.pt_b, self.pt_f]
+        #     self.ranges = [self.act_range_f, self.act_range_u, self.act_range_t, self.act_range_h, self.act_range_i, self.act_range_a, self.act_range_b, self.act_range_f]
+        #     self.circles = [self.circle_f, self.circle_u, self.circle_t, self.circle_h, self.circle_i, self.circle_a, self.circle_b, self.circle_f]
+        #     self.PIDs = [self.path_C_PID, self.path_K_PID, self.path_J_PID, self.path_F_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+        #     self.curve_PIDs = [self.circle_f_PID, self.circle_u_PID, self.circle_t_PID, self.circle_h_PID, self.circle_i_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
+        #     self.dist = self.calc_dist_array(self.all_points)
         
-        elif enter == 'm'and exit == 'h':
-            self.lines = [self.path_C, self.path_G, self.path_J, self.path_F, self.path_A, self.path_B, self.path_C]
-            self.points = [self.pt_f, self.pt_m, self.pt_l, self.pt_h, self.pt_i, self.pt_a, self.pt_b, self.pt_f]
-            self.ranges = [self.act_range_f, self.act_range_m, self.act_range_l, self.act_range_h, self.act_range_i, self.act_range_a, self.act_range_b, self.act_range_f]
-            self.circles = [self.circle_f, self.circle_m, self.circle_l, self.circle_h, self.circle_i, self.circle_a, self.circle_b, self.circle_f]
-            self.PIDs = [self.path_C_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            self.curve_PIDs = [self.circle_f_PID, self.circle_m_PID, self.circle_l_PID, self.circle_h_PID, self.circle_i_PID,  self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+        # elif enter == 'm'and exit == 'h':
+        #     self.lines = [self.path_C, self.path_G, self.path_J, self.path_F, self.path_A, self.path_B, self.path_C]
+        #     self.points = [self.pt_f, self.pt_m, self.pt_l, self.pt_h, self.pt_i, self.pt_a, self.pt_b, self.pt_f]
+        #     self.ranges = [self.act_range_f, self.act_range_m, self.act_range_l, self.act_range_h, self.act_range_i, self.act_range_a, self.act_range_b, self.act_range_f]
+        #     self.circles = [self.circle_f, self.circle_m, self.circle_l, self.circle_h, self.circle_i, self.circle_a, self.circle_b, self.circle_f]
+        #     self.PIDs = [self.path_C_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+        #     self.curve_PIDs = [self.circle_f_PID, self.circle_m_PID, self.circle_l_PID, self.circle_h_PID, self.circle_i_PID,  self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
+        #     self.dist = self.calc_dist_array(self.all_points)
         
-        elif enter == 'n'and exit == 'q':
-            self.lines = [self.path_C, self.path_K, self.path_A, self.path_H, self.path_I, self.path_K, self.path_A, self.path_H, self.path_C, self.path_K, self.path_J, self.path_H, self.path_C, self.path_K, self.path_A, self.path_B, self.path_C]
-            self.points = [self.pt_f, self.pt_u, self.pt_r, self.pt_n, self.pt_o, self.pt_s, self.pt_r, self.pt_n, self.pt_q, self.pt_u, self.pt_t, self.pt_p, self.pt_q, self.pt_u, self.pt_r, self.pt_a, self.pt_b, self.pt_f]
-            self.ranges = [self.act_range_f, self.act_range_u, self.act_range_r, self.act_range_n, self.act_range_o, self.act_range_s, self.act_range_r, self.act_range_n, self.act_range_q, self.act_range_u, self.act_range_t, self.act_range_p, self.act_range_q, self.act_range_u, self.act_range_r, self.act_range_a, self.act_range_b, self.act_range_f]
-            self.circles = [self.circle_f, self.circle_u, self.circle_r, self.circle_n, self.circle_o, self.circle_s, self.circle_r, self.circle_n, self.circle_q, self.circle_u, self.circle_t, self.circle_p, self.circle_q, self.circle_u, self.circle_r, self.circle_a, self.circle_b, self.circle_f]
-            self.PIDs = [self.path_C_PID, self.path_K_PID, self.path_A_PID, self.path_H_PID, self.path_I_PID, self.path_K_PID, self.path_A_PID, self.path_H_PID, self.path_C_PID, self.path_K_PID, self.path_J_PID, self.path_H_PID, self.path_C_PID, self.path_K_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            self.curve_PIDs = [self.circle_f_PID, self.circle_u_PID, self.circle_r_PID, self.circle_n_PID, self.circle_o_PID, self.circle_s_PID, self.circle_r_PID, self.circle_n_PID, self.circle_q_PID, self.circle_u_PID, self.circle_t_PID, self.circle_p_PID, self.circle_q_PID, self.circle_u_PID, self.circle_r_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+        # elif enter == 'n'and exit == 'q':
+        #     self.lines = [self.path_C, self.path_K, self.path_A, self.path_H, self.path_I, self.path_K, self.path_A, self.path_H, self.path_C, self.path_K, self.path_J, self.path_H, self.path_C, self.path_K, self.path_A, self.path_B, self.path_C]
+        #     self.points = [self.pt_f, self.pt_u, self.pt_r, self.pt_n, self.pt_o, self.pt_s, self.pt_r, self.pt_n, self.pt_q, self.pt_u, self.pt_t, self.pt_p, self.pt_q, self.pt_u, self.pt_r, self.pt_a, self.pt_b, self.pt_f]
+        #     self.ranges = [self.act_range_f, self.act_range_u, self.act_range_r, self.act_range_n, self.act_range_o, self.act_range_s, self.act_range_r, self.act_range_n, self.act_range_q, self.act_range_u, self.act_range_t, self.act_range_p, self.act_range_q, self.act_range_u, self.act_range_r, self.act_range_a, self.act_range_b, self.act_range_f]
+        #     self.circles = [self.circle_f, self.circle_u, self.circle_r, self.circle_n, self.circle_o, self.circle_s, self.circle_r, self.circle_n, self.circle_q, self.circle_u, self.circle_t, self.circle_p, self.circle_q, self.circle_u, self.circle_r, self.circle_a, self.circle_b, self.circle_f]
+        #     self.PIDs = [self.path_C_PID, self.path_K_PID, self.path_A_PID, self.path_H_PID, self.path_I_PID, self.path_K_PID, self.path_A_PID, self.path_H_PID, self.path_C_PID, self.path_K_PID, self.path_J_PID, self.path_H_PID, self.path_C_PID, self.path_K_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+        #     self.curve_PIDs = [self.circle_f_PID, self.circle_u_PID, self.circle_r_PID, self.circle_n_PID, self.circle_o_PID, self.circle_s_PID, self.circle_r_PID, self.circle_n_PID, self.circle_q_PID, self.circle_u_PID, self.circle_t_PID, self.circle_p_PID, self.circle_q_PID, self.circle_u_PID, self.circle_r_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
+        #     self.dist = self.calc_dist_array(self.all_points)
         
-        elif enter == 'm'and exit == 'j':
-            self.lines = [self.path_C, self.path_G, self.path_A, self.path_B, self.path_C]
-            self.points = [self.pt_f, self.pt_m, self.pt_j,self.pt_a, self.pt_b, self.pt_f]
-            self.ranges = [self.act_range_f, self.act_range_m, self.act_range_j, self.act_range_a, self.act_range_b, self.act_range_f]
-            self.circles = [self.circle_f, self.circle_m, self.circle_j, self.circle_a, self.circle_b, self.circle_f]
-            self.PIDs = [self.path_C_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            self.curve_PIDs = [self.circle_f_PID, self.circle_m_PID, self.circle_j_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+        # elif enter == 'm'and exit == 'j':
+        #     self.lines = [self.path_C, self.path_G, self.path_A, self.path_B, self.path_C]
+        #     self.points = [self.pt_f, self.pt_m, self.pt_j,self.pt_a, self.pt_b, self.pt_f]
+        #     self.ranges = [self.act_range_f, self.act_range_m, self.act_range_j, self.act_range_a, self.act_range_b, self.act_range_f]
+        #     self.circles = [self.circle_f, self.circle_m, self.circle_j, self.circle_a, self.circle_b, self.circle_f]
+        #     self.PIDs = [self.path_C_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+        #     self.curve_PIDs = [self.circle_f_PID, self.circle_m_PID, self.circle_j_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
+        #     self.dist = self.calc_dist_array(self.all_points)
         
-        elif enter == 'g'and exit == 'j':
-            self.lines = [self.path_I, self.path_G, self.path_A, self.path_B, self.path_C]
-            self.points = [self.pt_g, self.pt_k, self.pt_j,self.pt_a, self.pt_b, self.pt_f]
-            self.ranges = [self.act_range_g, self.act_range_k, self.act_range_j, self.act_range_a, self.act_range_b, self.act_range_f]
-            self.circles = [self.circle_g, self.circle_k, self.circle_j, self.circle_a, self.circle_b, self.circle_f]
-            self.PIDs = [self.path_I_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            self.curve_PIDs = [self.circle_g_PID, self.circle_k_PID, self.circle_j_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+        # elif enter == 'g'and exit == 'j':
+        #     self.lines = [self.path_I, self.path_G, self.path_A, self.path_B, self.path_C]
+        #     self.points = [self.pt_g, self.pt_k, self.pt_j,self.pt_a, self.pt_b, self.pt_f]
+        #     self.ranges = [self.act_range_g, self.act_range_k, self.act_range_j, self.act_range_a, self.act_range_b, self.act_range_f]
+        #     self.circles = [self.circle_g, self.circle_k, self.circle_j, self.circle_a, self.circle_b, self.circle_f]
+        #     self.PIDs = [self.path_I_PID, self.path_G_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+        #     self.curve_PIDs = [self.circle_g_PID, self.circle_k_PID, self.circle_j_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
+        #     self.dist = self.calc_dist_array(self.all_points)
         
-        elif enter == 'g'and exit == 's':
-            self.lines = [self.path_I, self.path_K, self.path_A, self.path_B, self.path_C]
-            self.points = [self.pt_g, self.pt_s, self.pt_r, self.pt_a, self.pt_b, self.pt_f]
-            self.ranges = [self.act_range_g, self.act_range_s, self.act_range_r, self.act_range_a, self.act_range_b, self.act_range_f]
-            self.circles = [self.circle_g, self.circle_s, self.circle_r, self.circle_a, self.circle_b, self.circle_f]
-            self.PIDs = [self.path_I_PID, self.path_K_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
-            self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID, self.circle_r_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
-            self.dist = self.calc_dist_array(self.all_points)
+        # elif enter == 'g'and exit == 's':
+        #     self.lines = [self.path_I, self.path_K, self.path_A, self.path_B, self.path_C]
+        #     self.points = [self.pt_g, self.pt_s, self.pt_r, self.pt_a, self.pt_b, self.pt_f]
+        #     self.ranges = [self.act_range_g, self.act_range_s, self.act_range_r, self.act_range_a, self.act_range_b, self.act_range_f]
+        #     self.circles = [self.circle_g, self.circle_s, self.circle_r, self.circle_a, self.circle_b, self.circle_f]
+        #     self.PIDs = [self.path_I_PID, self.path_K_PID, self.path_A_PID, self.path_B_PID, self.path_C_PID]
+        #     self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID, self.circle_r_PID, self.circle_a_PID, self.circle_b_PID, self.circle_f_PID]
+        #     self.dist = self.calc_dist_array(self.all_points)
         
     #helper functions for generate_map()
     def generate_line(self, pt_1, pt_2):
@@ -361,12 +349,19 @@ class CAV:
     def run(self):
         self.kp, self.ki, self.kd = self.PIDs[self.current]
         self.current_line = self.lines[self.current]
-        self.current_end_pt = self.points[self.next]
+        self.current_end_pt = self.turning_pts[self.next]
 
         #if the cav is near a critical point (which are turning corners), set path to a circle, change starting point and PID values to fit
         if abs(self.position_x  - self.current_end_pt[0])  < self.ranges[self.next][0] and \
             abs(self.position_z - self.current_end_pt[1]) < self.ranges[self.next][1] and \
-            self.current_end_pt[0] != self.merging_pt_x and self.current_end_pt[1] != self.merging_pt_y:
+            self.current_end_pt != self.pt_d:
+            if next == len(self.tuning_points)-1:
+                control_info = ControlInfo()
+                control_info.steering_angle = steering_angle
+                control_info.desired_velocity = 0
+                control_info.control_input = control_input
+                self.control_info_pub.publish(control_info)
+                print("finished running")            
             self.within_critical_range = True
             self.line_changed = False
             self.kp, self.ki, self.kd = self.curve_PIDs[self.next]
@@ -376,7 +371,7 @@ class CAV:
         #if a merging cav is near the merging point, switch to main path
         elif abs(self.position_x  - self.current_end_pt[0])  < self.ranges[self.next][0] and \
             abs(self.position_z - self.current_end_pt[1]) < self.ranges[self.next][1] and\
-            self.current_end_pt[0] == self.merging_pt_x and self.current_end_pt[1] == self.merging_pt_y:
+            self.current_end_pt == self.pt_d:
 
             self.within_critical_range = True
             self.line_changed = False
@@ -399,14 +394,35 @@ class CAV:
             self.line_changed = True
             self.within_critical_range = False
             self.current_line = self.lines[self.current]
-            self.current_end_pt = self.points[self.next]
+            self.current_end_pt = self.turning_pts[self.next]
             self.kp, self.ki, self.kd = self.PIDs[self.current]
             self.e_prev_lateral= 0
             self.e_int_lateral = 0
             lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
+
+
+
+        #increament collision points as they are traversed
+        if abs(self.position_x  - self.current_collision_pt1[0])  < self.lane_width/2 and \
+            abs(self.position_z - self.current_collision_pt1[1]) < self.lane_width/2:
+            self.within_collision_range = True
+            self.exit_collision_range = False
+        else:
+            self.exit_collision_range = True
+
+        if self.within_collision_range and self.exit_collision_range:
+            self.current_collision = (self.current_collision+1) % len(self.collision_pts)
+            self.next_collision = (self.next_collision+1) % len(self.collision_pts)
+            self.exit_collision_range = True
+            self.within_collision_range = False
+            self.current_collision_pt1 = self.collision_pts[self.current_collision]
+            self.current_collision_pt2 = self.collision_pts[self.next_collision]
+            
+        
+        
+        
         #calculate steering and publisher to the listener node on the limo
         actual_velocity = self.velocity
-
         if self.ID == "limo770" or self.ID == "limo795":
             desired_velocity = actual_velocity + self.qp_solution.u* 0.1 # Use control input from QP solution
             #print("act vel", actual_velocity, "desired_velocity", desired_velocity,"qp_solutn", self.qp_solution.u)
