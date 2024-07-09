@@ -19,9 +19,9 @@ class MainCoordinator:
 
 
     def run(self):
-        cav1 = CAV("limo770", False)
-        cav2 = CAV("limo155", True)
-        cav3 = CAV("limo795", True)
+        cav1 = CAV("limo770", False, 'G')
+        cav2 = CAV("limo155", True, 'I')
+        cav3 = CAV("limo795", True, 'J')
 
         order_list = [cav2, cav1, cav3]
 

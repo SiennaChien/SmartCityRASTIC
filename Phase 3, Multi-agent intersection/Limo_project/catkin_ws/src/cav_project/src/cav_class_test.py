@@ -242,36 +242,30 @@ class CAV:
             self.curve_PIDs = [self.circle_n_PID, self.circle_q_PID]
             self.dist = self.calc_dist_array(self.all_pts)
         
-        elif enter == 'G':
-            self.lines = [self.path_G]
-            self.collision_pts = [self.pt_l, self.pt_k]
-            self.tuning_pts = [self.pt_m, self.pt_j]
-            self.all_pts = [self.pt_m, self.pt_l, self.pt_k, self.pt_j]
-            self.ranges = [self.act_range_m, self.act_range_j]
-            self.circles = [self.circle_m, self.circle_j]
-            self.PIDs = [self.path_G_PID]
-            self.curve_PIDs = [self.circle_m_PID, self.circle_j_PID]
-            self.dist = self.calc_dist_array(self.points)
-        elif enter == 'J':
-            self.lines = [self.path_J]
-            self.collision_pts = [self.pt_p, self.pt_l]
-            self.tuning_pts = [self.pt_t, self.pt_h]
-            self.all_pts = [self.pt_t, self.pt_p, self.pt_l, self.pt_h]
-            self.ranges = [self.act_range_t, self.act_range_h]
-            self.circles = [self.circle_t, self.circle_h]
-            self.PIDs = [self.path_J_PID]
-            self.curve_PIDs = [self.circle_t_PID, self.circle_h_PID]
-            self.dist = self.calc_dist_array(self.points)
-        elif enter == 'I':
-            self.lines = [self.path_I]
-            self.collision_pts = [self.pt_k, self.pt_o]
-            self.tuning_pts = [self.pt_g, self.pt_s]
-            self.all_pts = [self.pt_g, self.pt_k, self.pt_o, self.pt_s]            
-            self.ranges = [self.act_range_g, self.act_range_s]
-            self.circles = [self.circle_g, self.circle_s]
-            self.PIDs = [self.path_I_PID]
-            self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID]
-            self.dist = self.calc_dist_array(self.points)
+        # elif enter == 'G':
+        #     self.lines = [self.path_G]
+        #     self.points = [self.pt_m, self.pt_j]
+        #     self.ranges = [self.act_range_m, self.act_range_j]
+        #     self.circles = [self.circle_m, self.circle_j]
+        #     self.PIDs = [self.path_G_PID]
+        #     self.curve_PIDs = [self.circle_m_PID, self.circle_j_PID]
+        #     self.dist = self.calc_dist_array(self.points)
+        # elif enter == 'J':
+        #     self.lines = [self.path_J]
+        #     self.points = [self.pt_t, self.pt_h]
+        #     self.ranges = [self.act_range_t, self.act_range_h]
+        #     self.circles = [self.circle_t, self.circle_h]
+        #     self.PIDs = [self.path_J_PID]
+        #     self.curve_PIDs = [self.circle_t_PID, self.circle_h_PID]
+        #     self.dist = self.calc_dist_array(self.points)
+        # elif enter == 'I':
+        #     self.lines = [self.path_I]
+        #     self.points = [self.pt_g, self.pt_s]
+        #     self.ranges = [self.act_range_g, self.act_range_s]
+        #     self.circles = [self.circle_g, self.circle_s]
+        #     self.PIDs = [self.path_I_PID]
+        #     self.curve_PIDs = [self.circle_g_PID, self.circle_s_PID]
+        #     self.dist = self.calc_dist_array(self.points)
 
         # #the 6 paths below collectively traverse every line and turn of the intersection map
         # elif enter == 't'and exit == 'h':
