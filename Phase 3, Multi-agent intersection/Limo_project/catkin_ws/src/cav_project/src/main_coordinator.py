@@ -6,7 +6,7 @@ from geometry_msgs.msg import PoseStamped
 from ackermann_msgs.msg import AckermannDrive
 from cav_class import CAV
 from cav_project.msg import limo_info, QP_solution, ControlInfo, limo_state, limo_state_matrix
-from function import search_ahead, search_previous, calc_distance, calc_qp_info
+from function import calc_qp_info
 
 class MainCoordinator:
     def __init__(self):
@@ -22,8 +22,10 @@ class MainCoordinator:
         cav1 = CAV("limo770", False, 'G')
         cav2 = CAV("limo155", True, 'I')
         cav3 = CAV("limo795", True, 'J')
+        cav4 = CAV("limo789", True, 'G')
 
-        order_list = [cav2, cav1, cav3]
+
+        order_list = [cav1, cav3, cav2, cav4]
 
         while not rospy.is_shutdown():
             limo_state_mat = limo_state_matrix()
