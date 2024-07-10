@@ -47,7 +47,11 @@ class CAV:
         self.position_x = 0
         self.position_y = 0
         self.position_z = 0
-        self.current_position = (0,0)
+        if ID == 'limo770':
+            self.position_x = 10000
+            self.position_y = 0
+            self.position_z = 10000
+        self.current_position = (self.position_x, self.position_z)
 
         #for run()
         self.lateral_error = 0

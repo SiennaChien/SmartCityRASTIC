@@ -84,7 +84,7 @@ def search_ahead(order_list, limo_num):
     front_limo = -1
     for i in range(limo_num-1, -1, -1): # check all limos in front of the queue
         #if another limo is on the same line, check if you are closer to the next collision point or the limo in front of you
-        if order_list[limo_num].current_line == order_list[i].current_line: 
+        if order_list[limo_num].current_line == order_list[i].current_line:
             limo_dist = calc_distance(order_list[limo_num].current_position, order_list[i].current_position)
             crit_dist = calc_manhattan_distance(order_list, limo_num, order_list[limo_num].current_collision_pt1)
             if crit_dist > limo_dist:
@@ -96,9 +96,9 @@ def search_collision(order_list, limo_num):
     limo = order_list[limo_num]
     collision_limo1 = -1
     collision_limo2 = -1
-    starting_pt_ind = limo.all_pts.index(limo.turning_pts(limo.current))
+    starting_pt_ind = limo.all_pts.index(limo.turning_pts[limo.current])
     ending_pt_ind = limo.all_pts.index(limo.current_end_pt)
-    
+
     #check all points on the same line, only consider collision points if they are on the same line
     for i in range(starting_pt_ind, ending_pt_ind+1):
         if limo.all_pts[i] == limo.current_collision_pt1:
@@ -111,7 +111,7 @@ def search_collision(order_list, limo_num):
             for i in range(limo_num-1, -1, -1):
                 if limo.current_collision_pt2 == order_list[i].current_collision_pt1 or limo.current_collision_pt2 == order_list[i].current_collision_pt2:
                     collision_limo2 = i
-                    break     
+                    break
     if limo.current_collision_pt1 == limo.current_collision_pt2:
         return collision_limo1, -1
     return collision_limo1, collision_limo2
