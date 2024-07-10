@@ -24,9 +24,11 @@ def calc_qp_info(order_list, limo_num):
     if collision_num1 == -1:
         d2 = -1
         v2 = -1
+        l2 = -1
     elif collision_num1 == front_num:
         d2 = -1
         v2 = -1
+        l2 = -1
     else:
         dk = calc_manhattan_distance(order_list, limo_num, collision_pt1)
         di = calc_manhattan_distance(order_list, collision_num1, collision_pt1)
