@@ -25,7 +25,7 @@ class MainCoordinator:
         cav4 = CAV("limo789", True, 'G')
 
 
-        order_list = [cav1, cav3, cav2, cav4]
+        order_list = [cav1, cav2, cav3, cav4]
 
         while not rospy.is_shutdown():
             limo_state_mat = limo_state_matrix()

@@ -5,9 +5,10 @@ def calc_qp_info(order_list, limo_num):
     front_num = search_ahead(order_list, limo_num)
     collision_num1, collision_num2 = search_collision(order_list, limo_num)
     limo = order_list[limo_num]
+    limo_current = limo.current
     collision_pt1 = limo.current_collision_pt1
     collision_pt2 = limo.current_collision_pt2
-    starting_pt = limo.turning_pts[limo.current]
+    starting_pt = limo.turning_pts[limo_current]
 
     d0 = calc_distance((limo.position_x, limo.position_z), starting_pt)
 
@@ -29,32 +30,25 @@ def calc_qp_info(order_list, limo_num):
         v2 = -1
         l2 = -1
     else:
-        collision_cav1 = order_list[collision_num1]
         dk = calc_manhattan_distance(order_list, limo_num, collision_pt1)
         di = calc_manhattan_distance(order_list, collision_num1, collision_pt1)
         d2 = di - dk
         v2 = order_list[collision_num1].velocity
-        l2 = calc_distance(collision_cav1.turning_pts[collision_cav1.current], collision_pt1)
 
     if collision_num2 == -1:
         d3 = -1
         v3 = -1
-        l3 = -1
     elif collision_num2 == front_num:
         d3 = -1
         v3 = -1
-        l3 = -1
     elif collision_num2 == collision_num1:
         d3 = -1
         v3 = -1
-        l3 = -1
     else:
-        collision_cav2 = order_list[collision_num2]
         dk = calc_manhattan_distance(order_list, limo_num, collision_pt2)
         di = calc_manhattan_distance(order_list, collision_num2, collision_pt2)
         d3 = di - dk
         v3 = order_list[collision_num2].velocity
-        l3 = calc_distance(collision_cav2.turning_pts[collision_cav2.current], collision_pt2)
 
     #constraints for vd
     if limo.within_critical_range == True:
@@ -71,49 +65,59 @@ def calc_qp_info(order_list, limo_num):
     limo_state_msg.v1 = v1
     limo_state_msg.d2 = d2
     limo_state_msg.v2 = v2
-    limo_state_msg.l2 = l2
+    limo_state_msg.v2 = v2
     limo_state_msg.d3 = d3
     limo_state_msg.v3 = v3
-    limo_state_msg.l3 = l3
     limo_state_msg.vd = vd
+
     return limo_state_msg
 
 
 #below are helper functions for calc_qp_info()
 def search_ahead(order_list, limo_num):
-    front_limo = -1
-    for i in range(limo_num-1, -1, -1): # check all limos in front of the queue
-        #if another limo is on the same line, check if you are closer to the next collision point or the limo in front of you
-        if order_list[limo_num].current_line == order_list[i].current_line: 
-            limo_dist = calc_distance(order_list[limo_num].current_position, order_list[i].current_position)
-            crit_dist = calc_manhattan_distance(order_list, limo_num, order_list[limo_num].current_collision_pt1)
-            if crit_dist > limo_dist:
+    for i in range(limo_num-1, -1, -1):
+        if order_list[limo_num].current_line == order_list[i].current_line and limo_num != i:
+            limo_dist = calc_distance(order_list[limo_num].current_position, order_list[limo_num].current_end_pt)
+            front_dist = calc_distance(order_list[i].current_position, order_list[limo_num].current_end_pt)
+            if front_dist < limo_dist:
                 front_limo = i
+            else:
+                front_limo = -1
             break
+        else:
+            front_limo = -1
     return front_limo
 
 def search_collision(order_list, limo_num):
-    limo = order_list[limo_num]
-    collision_limo1 = -1
-    collision_limo2 = -1
-    starting_pt_ind = limo.all_pts.index(limo.turning_pts(limo.current))
-    ending_pt_ind = limo.all_pts.index(limo.current_end_pt)
-    
-    #check all points on the same line, only consider collision points if they are on the same line
-    for i in range(starting_pt_ind, ending_pt_ind+1):
-        if limo.all_pts[i] == limo.current_collision_pt1:
-            for i in range(limo_num-1, -1, -1):
-                #check if another limo who is in front of the queue shares a collision point
-                if limo.current_collision_pt1 == order_list[i].current_collision_pt1 or limo.current_collision_pt1 == order_list[i].current_collision_pt2:
-                    collision_limo1 = i
-                    break
-        elif limo.all_pts[i] == limo.current_collision_pt2:
-            for i in range(limo_num-1, -1, -1):
-                if limo.current_collision_pt2 == order_list[i].current_collision_pt1 or limo.current_collision_pt2 == order_list[i].current_collision_pt2:
-                    collision_limo2 = i
-                    break     
-    if limo.current_collision_pt1 == limo.current_collision_pt2:
+    for i in range(limo_num-1, -1, -1):
+        if order_list[limo_num].current_collision_pt1 == order_list[i].current_collision_pt1 and limo_num != i:
+            current_collision_pt = order_list[limo_num].current_collision_pt1
+            limo_dist = calc_manhattan_distance(order_list, limo_num, current_collision_pt)
+            collision_dist = calc_manhattan_distance(order_list, i, current_collision_pt)
+            if limo_dist * collision_dist > 0 and collision_dist < limo_dist:
+                collision_limo1 = i
+            else:
+                collision_limo1 = -1
+            break
+        else:
+            collision_limo1 = -1
+
+    if order_list[limo_num].current_collision_pt1 == order_list[limo_num].current_collision_pt2:
         return collision_limo1, -1
+
+    for i in range(limo_num-1, -1, -1):
+        if order_list[limo_num].current_collision_pt2 == order_list[i].current_collision_pt1 and limo_num != i:
+            current_collision_pt = order_list[limo_num].current_collision_pt2
+            limo_dist = calc_manhattan_distance(order_list, limo_num, current_collision_pt)
+            collision_dist = calc_manhattan_distance(order_list, i, current_collision_pt)
+            if collision_dist < limo_dist:
+                collision_limo2 = i
+            else:
+                collision_limo2 = -1
+            break
+        else:
+            collision_limo2 = -1
+
     return collision_limo1, collision_limo2
 
 def calc_distance(pt_1, pt_2):
