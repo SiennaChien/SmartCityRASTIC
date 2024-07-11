@@ -30,8 +30,8 @@ def calc_qp_info(order_list, limo_num):
         l2 = -1
     else:
         collision_cav1 = order_list[collision_num1]
-        dk = calc_manhattan_distance(order_list, limo_num, collision_pt1)
-        di = calc_manhattan_distance(order_list, collision_num1, collision_pt1)
+        dk = calc_manhattan_distance(order_list, collision_num1, collision_pt1)
+        di = calc_manhattan_distance(order_list, limo_num, collision_pt1)
         d2 = di - dk
         v2 = order_list[collision_num1].velocity
         l2 = calc_distance(collision_cav1.turning_pts[collision_cav1.current], collision_pt1)
@@ -50,17 +50,17 @@ def calc_qp_info(order_list, limo_num):
         l3 = -1
     else:
         collision_cav2 = order_list[collision_num2]
-        dk = calc_manhattan_distance(order_list, limo_num, collision_pt2)
-        di = calc_manhattan_distance(order_list, collision_num2, collision_pt2)
+        dk = calc_manhattan_distance(order_list, collision_num2, collision_pt2)
+        di = calc_manhattan_distance(order_list, limo_num, collision_pt2)
         d3 = di - dk
         v3 = order_list[collision_num2].velocity
         l3 = calc_distance(collision_cav2.turning_pts[collision_cav2.current], collision_pt2)
 
     #constraints for vd
     if limo.within_critical_range == True:
-        vd = 0.55
+        vd = 1
     else:
-        vd = 0.55
+        vd = 1
 
     #building the message
     limo_state_msg = limo_state()
@@ -86,10 +86,15 @@ def search_ahead(order_list, limo_num):
         #if another limo is on the same line, check if you are closer to the next collision point or the limo in front of you
         if order_list[limo_num].current_line == order_list[i].current_line:
             limo_dist = calc_distance(order_list[limo_num].current_position, order_list[i].current_position)
-            crit_dist = calc_manhattan_distance(order_list, limo_num, order_list[limo_num].current_collision_pt1)
-            if crit_dist > limo_dist:
+            if order_list[limo_num].current_collision_pt1 != (-1, -1):
+                crit_dist = calc_manhattan_distance(order_list, limo_num, order_list[limo_num].current_collision_pt1)
+                if crit_dist > limo_dist:
+                    front_limo = i
+                    break
+            else:
                 front_limo = i
-            break
+                break
+
     return front_limo
 
 def search_collision(order_list, limo_num):
@@ -100,16 +105,16 @@ def search_collision(order_list, limo_num):
     ending_pt_ind = limo.all_pts.index(limo.current_end_pt)
 
     #check all points on the same line, only consider collision points if they are on the same line
-    for i in range(starting_pt_ind, ending_pt_ind+1):
-        if limo.all_pts[i] == limo.current_collision_pt1:
+    for j in range(starting_pt_ind+1, ending_pt_ind+1):
+        if limo.all_pts[j] == limo.current_collision_pt1:
             for i in range(limo_num-1, -1, -1):
                 #check if another limo who is in front of the queue shares a collision point
-                if limo.current_collision_pt1 == order_list[i].current_collision_pt1 or limo.current_collision_pt1 == order_list[i].current_collision_pt2:
+                if limo.current_collision_pt1 == order_list[i].current_collision_pt1 or limo.current_collision_pt1 == order_list[i].current_collision_pt2 and order_list[limo_num].current_collision_pt1 != (-1, -1):
                     collision_limo1 = i
                     break
-        elif limo.all_pts[i] == limo.current_collision_pt2:
+        elif limo.all_pts[j] == limo.current_collision_pt2:
             for i in range(limo_num-1, -1, -1):
-                if limo.current_collision_pt2 == order_list[i].current_collision_pt1 or limo.current_collision_pt2 == order_list[i].current_collision_pt2:
+                if limo.current_collision_pt2 == order_list[i].current_collision_pt1 or limo.current_collision_pt2 == order_list[i].current_collision_pt2 and order_list[limo_num].current_collision_pt2 != (-1, -1):
                     collision_limo2 = i
                     break
     if limo.current_collision_pt1 == limo.current_collision_pt2:

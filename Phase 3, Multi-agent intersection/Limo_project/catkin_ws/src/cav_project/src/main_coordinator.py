@@ -19,13 +19,18 @@ class MainCoordinator:
 
 
     def run(self):
-        cav1 = CAV("limo770", False, 'G')
-        cav2 = CAV("limo155", True, 'I')
-        cav3 = CAV("limo795", True, 'J')
-        cav4 = CAV("limo789", True, 'G')
+        cav1 = CAV("limo770", False, 'm', 'j')
+        cav2 = CAV("limo155", True, 'g', 's')
+        cav3 = CAV("limo795", True, 'm', 'j')
+        cav4 = CAV("limo789", True, 't', 'h')
+
+        #cav1 = CAV("limo770", False, 'm', 'h')
+        #cav2 = CAV("limo155", True, 'g', 'j')
+        #cav3 = CAV("limo795", True, 't', 'h')
+        #cav4 = CAV("limo789", True, 'm', 'j')
 
 
-        order_list = [cav1, cav2, cav3, cav4]
+        order_list = [cav1, cav2, cav4, cav3]
 
         while not rospy.is_shutdown():
             limo_state_mat = limo_state_matrix()
@@ -38,6 +43,7 @@ class MainCoordinator:
                 cav1.run()
                 cav2.run()
                 cav3.run()
+                cav4.run()
                 self.rate.sleep()
 
 

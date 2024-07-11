@@ -4,7 +4,7 @@ import numpy as np
 from cvxopt import matrix, solvers
 from cav_project.msg import limo_state, limo_state_matrix, QP_solution
 
-class QPSolverCAV:
+class QPSolverCAV1:
     def __init__(self, cav1_id, cav2_id, cav3_id, cav4_id):
         self.cav1_id = cav1_id  # CAV1 with the solver
         self.cav2_id = cav2_id  # CAV2 preceding CAV1 (rear-end constraint)
@@ -13,9 +13,9 @@ class QPSolverCAV:
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1  # Maximum control input (acceleration)
-        self.phiRearEnd = 4.8  # Reaction time for rear-end safety constraint
-        self.phiLateral = 3.3  # Reaction time for lateral safety constraint
-        self.deltaSafetyDistance = 0.3  # Minimum safety distance (meters)
+        self.phiRearEnd = 0.5  # Reaction time for rear-end safety constraint
+        self.phiLateral = 0.5  # Reaction time for lateral safety constraint
+        self.deltaSafetyDistance = 0.7  # Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
 
@@ -30,16 +30,19 @@ class QPSolverCAV:
         for limo in data.limos:
             if limo.limoID == self.cav1_id:
                 self.x0 = [limo.d0 / 1000, limo.vel, limo.d2 / 1000, limo.d3 / 1000]
-                self.state = [limo.limoID, limo.vel, limo.d0 / 1000, limo.d1 / 1000, limo.v1, limo.d2 / 1000, limo.v2, limo.vd, limo.d3 / 1000, limo.v3]
+                self.state = [limo.limoID, limo.vel, limo.d0 / 1000, limo.d1 / 1000, limo.v1, limo.d2 / 1000, limo.v2, limo.vd, limo.d3 / 1000, limo.v3, limo.l2/1000, limo.l3/1000]
 
     def OCBF_SecondOrderDynamics(self):
         x0 = self.x0  # x0[0] is d0, x0[1] is vel, x0[2] is d2, x0[3] is d3
         eps = 10
         psc = 0.1
         vd = self.state[7]
+        l2= self.state[10]
+        l3= self.state[11]
+
 
         # Reference control input
-        u_ref = 0.5
+        u_ref = 1
 
         # Physical limitations on velocity
         b_vmax = self.v_max - x0[1]
@@ -66,10 +69,10 @@ class QPSolverCAV:
                 b = np.append(b, [LfB + h])
 
         # Lateral Safety Constraints
-        lateral_constraints = [(self.state[5], self.state[6]), (self.state[8], self.state[9])]  # (d2, v2), (d3, v3)
+        lateral_constraints = [(self.state[5], self.state[6], l2), (self.state[8], self.state[9], l3)]  # (d2, v2), (d3, v3)
         L = 3.5  # Length of the merging lane
 
-        for (d, v) in lateral_constraints:
+        for (d, v, L) in lateral_constraints:
             if d != -0.001:
                 print("Applying lateral CBF")
                 bigPhi = self.phiLateral * x0[0] / L
@@ -101,7 +104,7 @@ class QPSolverCAV:
             u = self.OCBF_SecondOrderDynamics()
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u
-            print("Computed control input u:", u)
+            print("Computed control input u qp 1:", u)
             self.qp_solution_pub.publish(qp_solution_msg)
 
     def run(self):
@@ -110,5 +113,5 @@ class QPSolverCAV:
             self.rate.sleep()
 
 if __name__ == '__main__':
-    solver = QPSolverCAV("limo770", "limo789", "limo795", "limo155")
+    solver = QPSolverCAV1("limo770", "limo155", "limo789", "limo795")
     solver.run()

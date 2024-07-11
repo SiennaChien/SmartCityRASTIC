@@ -4,23 +4,23 @@ import numpy as np
 from cvxopt import matrix, solvers
 from cav_project.msg import limo_state, limo_state_matrix, QP_solution
 
-class QPSolverCAV2:
-    def __init__(self, cav2_id, cav3_id, cav1_id, cav4_id):
-        self.cav2_id = cav2_id  # CAV2 with the solver (first lateral)
-        self.cav3_id = cav3_id  # CAV3 preceeding
+class QPSolverCAV4:
+    def __init__(self, cav4_id, cav2_id, cav1_id, cav3_id):
+        self.cav4_id = cav4_id  # CAV4 with the solver (second lateral)
+        self.cav2_id = cav2_id  # CAV2 preceding CAV1 (rear-end constraint)s
         self.cav1_id = cav1_id  # receeding
-        self.cav4_id = cav4_id  # CAVs4 for second lateral constraint
+        self.cav3_id = cav3_id  # CAV3 for firstlateral constraint
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1  # Maximum control input (acceleration)
         self.phiRearEnd = 0.5  # Reaction time for rear-end safety constraint
-        self.phiLateral = 0.5 # Reaction time for lateral safety constraint
+        self.phiLateral = 0.5  # Reaction time for lateral safety constraint
         self.deltaSafetyDistance = 0.7  # Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
 
-        rospy.init_node("qp_solver_" + self.cav2_id)
-        self.qp_solution_pub = rospy.Publisher('/qp_solution_' + self.cav2_id, QP_solution, queue_size=10)
+        rospy.init_node("qp_solver_" + self.cav4_id)
+        self.qp_solution_pub = rospy.Publisher('/qp_solution_' + self.cav4_id, QP_solution, queue_size=10)
         rospy.Subscriber('/limo_state_matrix', limo_state_matrix, self.limo_state_callback)
 
         self.state = None
@@ -28,7 +28,7 @@ class QPSolverCAV2:
 
     def limo_state_callback(self, data):
         for limo in data.limos:
-            if limo.limoID == self.cav2_id:
+            if limo.limoID == self.cav4_id:
                 self.x0 = [limo.d0 / 1000, limo.vel, limo.d2 / 1000, limo.d3 / 1000]
                 self.state = [limo.limoID, limo.vel, limo.d0 / 1000, limo.d1 / 1000, limo.v1, limo.d2 / 1000, limo.v2, limo.vd, limo.d3 / 1000, limo.v3, limo.l2/1000, limo.l3/1000]
 
@@ -104,7 +104,7 @@ class QPSolverCAV2:
             u = self.OCBF_SecondOrderDynamics()
             qp_solution_msg = QP_solution()
             qp_solution_msg.u = u
-            print("Computed control input u qp 2:", u)
+            print("Computed control input u qp 4:", u)
             self.qp_solution_pub.publish(qp_solution_msg)
 
     def run(self):
@@ -113,5 +113,5 @@ class QPSolverCAV2:
             self.rate.sleep()
 
 if __name__ == '__main__':
-    solver = QPSolverCAV2("limo155", "limo795", "limo770", "limo789")
+    solver = QPSolverCAV4("limo789", "limo155", "limo770", "limo795")
     solver.run()
