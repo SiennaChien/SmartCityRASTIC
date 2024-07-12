@@ -62,10 +62,14 @@ class CAV:
         self.next_collision = 1
         self.current_line = self.lines[self.current]
         self.current_end_pt = self.turning_pts[self.next]
-        if self.collision_pts[self.current_collision]:
+        if self.current_collision <= len(self.collision_pts)-2:
             self.current_collision_pt1 = self.collision_pts[self.current_collision]
-        if self.collision_pts[self.next_collision]:
+        else:
+            self.current_collision_pt1 = (-1, -1)
+        if self.next_collision <= len(self.collision_pts)-1:
             self.current_collision_pt2 = self.collision_pts[self.next_collision]
+        else:
+            self.current_collision_pt2 = (-1, -1)
 
     def mocap_callback(self, msg):
         self.position_z = msg.pose.position.z * 1000
@@ -91,20 +95,20 @@ class CAV:
         self.pt_d = (1825, -652)
         self.pt_e = (2040, 2519)
         self.pt_f = (683, 2536)
-        self.pt_g = (29, 222)
-        self.pt_h = (394, 554)
+        self.pt_g = (153, 287)
+        self.pt_h = (508, 677)
         self.pt_i = (1560, -1945)
-        self.pt_j = (-2070, -1992)
+        self.pt_j = (-2017, -1933)
         self.pt_k = (-2007, 243)
         self.pt_l = (-2028, 639)
-        self.pt_m = (-1954, 2640)
+        self.pt_m = (-2006, 2597)
         self.pt_n = (-2439, -1980)
         self.pt_o = (-2460, 253)
         self.pt_p = (-2454, 628)
         self.pt_q = (-2356, 2654)
         self.pt_r = (-4683, -1980)
-        self.pt_s = (-4683, 259)
-        self.pt_t = (-4659, 682)
+        self.pt_s = (-4728, 289)
+        self.pt_t = (-4658, 647)
         self.pt_u = (-4660, 2654)
 
         #equations for each line, in the A B C form, each variable is a tuple (A, B, C)
@@ -436,6 +440,7 @@ class CAV:
         else:
             self.within_critical_range = False
             self.current_line = self.lines[self.current]
+            print(self.ID, self.current_line)
             lateral_error = (self.current_line[0]*self.position_x + self.current_line[1]*self.position_z + self.current_line[2])/((self.current_line[0]**2 + self.current_line[1]**2)**0.5)
             #print(self.ID, "out of corner", lateral_error)
 

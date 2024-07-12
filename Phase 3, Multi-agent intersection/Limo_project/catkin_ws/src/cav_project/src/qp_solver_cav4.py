@@ -13,9 +13,9 @@ class QPSolverCAV4:
 
         self.u_min = -10  # Minimum control input (deceleration)
         self.u_max = 1  # Maximum control input (acceleration)
-        self.phiRearEnd = 0.5  # Reaction time for rear-end safety constraint
-        self.phiLateral = 0.5  # Reaction time for lateral safety constraint
-        self.deltaSafetyDistance = 0.7  # Minimum safety distance (meters)
+        self.phiRearEnd = 0.2 # Reaction time for rear-end safety constraint
+        self.phiLateral = 0.2  # Reaction time for lateral safety constraint
+        self.deltaSafetyDistance = 0.7 # Minimum safety distance (meters)
         self.v_min = 0  # Minimum velocity
         self.v_max = 1  # Maximum velocity
 

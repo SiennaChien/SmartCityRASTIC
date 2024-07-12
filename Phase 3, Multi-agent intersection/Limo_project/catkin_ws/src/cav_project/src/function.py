@@ -87,7 +87,8 @@ def search_ahead(order_list, limo_num):
         if order_list[limo_num].current_line == order_list[i].current_line:
             limo_dist = calc_distance(order_list[limo_num].current_position, order_list[i].current_position)
             if order_list[limo_num].current_collision_pt1 != (-1, -1):
-                crit_dist = calc_manhattan_distance(order_list, limo_num, order_list[limo_num].current_collision_pt1)
+                crit_dist =  calc_distance(order_list[limo_num].current_position, order_list[limo_num].current_collision_pt1)
+                #crit_dist = calc_manhattan_distance(order_list, limo_num, order_list[limo_num].current_collision_pt1)
                 if crit_dist > limo_dist:
                     front_limo = i
                     break
@@ -105,16 +106,17 @@ def search_collision(order_list, limo_num):
     ending_pt_ind = limo.all_pts.index(limo.current_end_pt)
 
     #check all points on the same line, only consider collision points if they are on the same line
-    for j in range(starting_pt_ind+1, ending_pt_ind+1):
-        if limo.all_pts[j] == limo.current_collision_pt1:
+    for j in range(starting_pt_ind, ending_pt_ind+1):
+        if limo.all_pts[j] == limo.current_collision_pt1 and limo.current_collision_pt1 != (-1, -1):
             for i in range(limo_num-1, -1, -1):
                 #check if another limo who is in front of the queue shares a collision point
-                if limo.current_collision_pt1 == order_list[i].current_collision_pt1 or limo.current_collision_pt1 == order_list[i].current_collision_pt2 and order_list[limo_num].current_collision_pt1 != (-1, -1):
+                if limo.current_collision_pt1 == order_list[i].current_collision_pt1 or limo.current_collision_pt1 == order_list[i].current_collision_pt2:
                     collision_limo1 = i
                     break
-        elif limo.all_pts[j] == limo.current_collision_pt2:
+    for j in range(starting_pt_ind, ending_pt_ind+1):
+        if limo.all_pts[j] == limo.current_collision_pt2 and limo.current_collision_pt2 != (-1, -1):
             for i in range(limo_num-1, -1, -1):
-                if limo.current_collision_pt2 == order_list[i].current_collision_pt1 or limo.current_collision_pt2 == order_list[i].current_collision_pt2 and order_list[limo_num].current_collision_pt2 != (-1, -1):
+                if limo.current_collision_pt2 == order_list[i].current_collision_pt1 or limo.current_collision_pt2 == order_list[i].current_collision_pt2 :
                     collision_limo2 = i
                     break
     if limo.current_collision_pt1 == limo.current_collision_pt2:
